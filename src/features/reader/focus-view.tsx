@@ -4,16 +4,20 @@ import { Icon, Spinner } from '../../components';
 import { getSurah } from '../../lib/quran';
 import { arabicNum } from '../../lib/format';
 import type { Ayah } from '../../lib/types';
+import { useReader } from '../../store/reader-store';
 
 // Distraction-free reading: one ayah, large, minimal chrome. Tap to advance.
 export function FocusView({ n }: { n: number }) {
   const [ayahs, setAyahs] = useState<Ayah[] | null>(null);
   const [i, setI] = useState(0);
+  const markRead = useReader((s) => s.markRead);
 
   useEffect(() => {
     setI(0);
     void getSurah(n).then((s) => setAyahs(s?.ayahs ?? []));
   }, [n]);
+
+  useEffect(() => { if (ayahs?.[i]) markRead(n, ayahs[i].a); }, [ayahs, i, n, markRead]);
 
   if (!ayahs) return <Spinner />;
   const a = ayahs[i];

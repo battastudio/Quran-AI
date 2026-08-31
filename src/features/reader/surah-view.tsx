@@ -23,8 +23,21 @@ export function SurahView({ n }: { n: number }) {
     void allBookmarks().then((b) => setMarks(new Set(b.map((x) => x.key))));
   }, [n]);
 
+  // Track the ayah nearest the viewport centre so "continue reading" is accurate.
   useEffect(() => {
-    if (surah) markRead(surah.n, 1);
+    if (!surah) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        const top = entries.filter((e) => e.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (top) markRead(surah.n, Number(top.target.id.replace('ayah-', '')));
+      },
+      { rootMargin: '-45% 0px -45% 0px' },
+    );
+    surah.ayahs.forEach((a) => {
+      const el = document.getElementById(`ayah-${a.a}`);
+      if (el) io.observe(el);
+    });
+    return () => io.disconnect();
   }, [surah, markRead]);
 
   useEffect(() => {

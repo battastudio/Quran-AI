@@ -1,33 +1,19 @@
 import { useEffect, useState } from 'react';
+import { Icon } from '../../components';
 import { getKv, setKv } from '../../lib/db';
+import { isIOS, isStandalone, useInstall } from './install-store';
 
-interface BIPEvent extends Event {
-  prompt: () => Promise<void>;
-}
-
-const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent);
-const standalone = () =>
-  window.matchMedia('(display-mode: standalone)').matches ||
-  (navigator as { standalone?: boolean }).standalone === true;
-
-// Android/Chrome: native install prompt. iOS Safari: manual instructions.
+// Passive banner (dismissible). The always-on button lives in Home/Settings.
 export function InstallPrompt() {
-  const [deferred, setDeferred] = useState<BIPEvent | null>(null);
-  const [iosHint, setIosHint] = useState(false);
+  const { deferred, promptInstall } = useInstall();
   const [dismissed, setDismissed] = useState(true);
+  const iosHint = isIOS() && !isStandalone();
 
   useEffect(() => {
     void getKv<boolean>('installDismissed').then((d) => setDismissed(Boolean(d)));
-    const onBip = (e: Event) => {
-      e.preventDefault();
-      setDeferred(e as BIPEvent);
-    };
-    window.addEventListener('beforeinstallprompt', onBip);
-    if (isIOS() && !standalone()) setIosHint(true);
-    return () => window.removeEventListener('beforeinstallprompt', onBip);
   }, []);
 
-  if (dismissed || standalone() || (!deferred && !iosHint)) return null;
+  if (dismissed || isStandalone() || (!deferred && !iosHint)) return null;
 
   const close = () => {
     setDismissed(true);
@@ -39,12 +25,12 @@ export function InstallPrompt() {
       {deferred ? (
         <>
           <span>ثبّت «نور القرآن» على جهازك</span>
-          <button className="btn btn--sm" onClick={() => void deferred.prompt()}>تثبيت</button>
+          <button className="btn btn--sm" onClick={() => void promptInstall()}>تثبيت</button>
         </>
       ) : (
         <span>للتثبيت على آيفون: المشاركة ⬆ ثم «أضف إلى الشاشة الرئيسية»</span>
       )}
-      <button className="icon-btn" aria-label="إغلاق" onClick={close}>✕</button>
+      <button className="icon-btn" aria-label="إغلاق" onClick={close}><Icon name="close" size={18} /></button>
     </div>
   );
 }

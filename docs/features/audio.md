@@ -2,8 +2,11 @@
 
 `src/features/audio/` + `src/store/audio-store.ts` + `src/lib/audio-*.ts`.
 
-- **Source:** everyayah.com CDN. URL built by `ayahAudioUrl(reciter, surah, ayah)`.
-  Reciter catalog in `public/data/reciters.json` (6 reciters).
+- **Source:** `cdn.islamic.network` — **176 Arabic reciters**. URL built by
+  `ayahAudioUrl(edition, globalAyah, bitrate)` (needs the global ayah number `g`
+  bundled in `quran.json`). Reciter catalog (`ar.*` editions) in
+  `public/data/reciters.json`; **searchable** picker + bitrate (64/128/192) in
+  Settings → التلاوة والصوت.
 - **Playback:** `audio-store.ts` owns one `<audio>` element and a queue; plays a
   single ayah or a whole surah with auto-advance (drives reader highlight),
   speed (0.75–1.5×) and A–B loop.

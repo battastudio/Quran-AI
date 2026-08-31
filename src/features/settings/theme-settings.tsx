@@ -1,11 +1,19 @@
+import { Toggle } from '../../components';
 import { useSettings } from '../../store/settings-store';
-import type { AyahFont, ReaderView, ThemeMode } from '../../lib/types';
+import type { AyahFont, ReaderView, SwipeDir, ThemeMode } from '../../lib/types';
+
+const SWIPES: { id: SwipeDir; label: string }[] = [
+  { id: 'rtl', label: 'يمين ← يسار' },
+  { id: 'ltr', label: 'يسار ← يمين' },
+];
 
 const THEMES: { id: ThemeMode; label: string; swatch: string }[] = [
   { id: 'auto', label: 'تلقائي', swatch: 'linear-gradient(135deg,#f6f4ee 50%,#0f1511 50%)' },
   { id: 'light', label: 'فاتح', swatch: '#f6f4ee' },
   { id: 'dark', label: 'داكن', swatch: '#0f1511' },
-  { id: 'emerald', label: 'زمرّدي', swatch: '#0e3327' },
+  { id: 'emerald', label: 'زمرّدي', swatch: 'linear-gradient(135deg,#103a2d,#d8b45f)' },
+  { id: 'royal', label: 'ملكي', swatch: 'linear-gradient(135deg,#0d0c0f 55%,#c9a24a)' },
+  { id: 'midnight', label: 'أخضر داكن', swatch: '#071310' },
   { id: 'sepia', label: 'ورقي', swatch: '#f3ead6' },
   { id: 'night', label: 'ليلي', swatch: '#14110c' },
 ];
@@ -21,7 +29,7 @@ const VIEWS: { id: ReaderView; label: string }[] = [
 ];
 
 export function ThemeSettings() {
-  const { theme, ayahFont, readerView, set } = useSettings();
+  const { theme, ayahFont, readerView, swipeDir, mushafPaper, set } = useSettings();
   return (
     <div className="stack">
       <div className="field">
@@ -55,6 +63,15 @@ export function ThemeSettings() {
           ))}
         </div>
       </div>
+      <div className="field">
+        <span>اتجاه التمرير بين الصفحات والسور</span>
+        <div className="chips">
+          {SWIPES.map((v) => (
+            <button key={v.id} className={swipeDir === v.id ? 'chip chip--on' : 'chip'} onClick={() => set({ swipeDir: v.id })}>{v.label}</button>
+          ))}
+        </div>
+      </div>
+      <Toggle label="صفحة المصحف بخلفية ورقية مزخرفة" checked={mushafPaper} onChange={(v) => set({ mushafPaper: v })} />
     </div>
   );
 }

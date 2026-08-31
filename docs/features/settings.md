@@ -14,4 +14,11 @@ Sections (`settings-screen.tsx`, native collapsible `<details>`):
 5. **البيانات والتخزين** → `data-settings.tsx` (export/import progress JSON,
    reset app + clear caches).
 
+## Themes (from the design mockups)
+Selectable in المظهر والعرض: **auto · light · dark · زمرّدي (emerald) · ملكي
+(royal black+gold) · أخضر داكن (midnight) · ورقي (sepia) · ليلي (night)** — each a
+`data-theme` token block in `src/styles/theme.css`, applied by `applyTheme`.
+The Mushaf page has a **parchment reading surface + gold ornamental frame + surah
+banner** (toggle: «صفحة المصحف بخلفية ورقية»), matching the mockups.
+
 Adding any new capability? Surface its control here and persist it (CLAUDE.md rule).

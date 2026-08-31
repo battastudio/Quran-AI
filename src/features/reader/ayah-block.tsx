@@ -45,7 +45,7 @@ export function AyahBlock({ surah, ayah, playing, bookmarked }: Props) {
         <span className="ayah__mark">{ayahMark(ayah.a)}</span>
       </p>
       <div className="ayah__actions">
-        <button className="icon-btn" aria-label="استماع" onClick={() => playFrom([{ surah, ayah: ayah.a }])}><Icon name="play" /></button>
+        <button className="icon-btn" aria-label="استماع" onClick={() => playFrom([{ surah, ayah: ayah.a, g: ayah.g }])}><Icon name="play" /></button>
         <button className="icon-btn" aria-label="تفسير" onClick={() => showTafsir(surah, ayah.a)}><Icon name="info" /></button>
         <button
           className={marked ? 'icon-btn icon-btn--on' : 'icon-btn'}

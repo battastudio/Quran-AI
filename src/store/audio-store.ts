@@ -5,6 +5,7 @@ import { useSettings } from './settings-store';
 interface Track {
   surah: number;
   ayah: number;
+  g: number; // global ayah number (for the CDN)
 }
 
 interface AudioState {
@@ -65,7 +66,8 @@ function playIndex(i: number, set: SetFn, get: GetFn) {
   }
   const track = queue[i];
   const a = audio();
-  a.src = ayahAudioUrl(useSettings.getState().reciter, track.surah, track.ayah);
+  const st = useSettings.getState();
+  a.src = ayahAudioUrl(st.reciter, track.g, st.audioBitrate);
   a.playbackRate = speed;
   a.onended = () => playIndex(i + 1, set, get);
   void a.play();

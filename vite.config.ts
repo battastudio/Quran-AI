@@ -46,7 +46,7 @@ export default defineConfig({
           {
             // Reciter + per-word audio: cache so downloaded content plays offline.
             urlPattern: ({ url }) =>
-              url.href.includes('everyayah.com') || url.href.includes('qurancdn.com'),
+              url.href.includes('cdn.islamic.network') || url.href.includes('qurancdn.com'),
             handler: 'CacheFirst',
             options: {
               cacheName: 'reciter-audio',

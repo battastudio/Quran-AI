@@ -8,6 +8,8 @@ import { accuracy, align, type TokenStatus } from './align';
 import { ensureWhisper, startRecording, transcribe } from './whisper';
 import { MicButton } from './mic-button';
 import { AccuracyRing } from './accuracy-ring';
+import { Waveform } from './waveform';
+import { useSettings } from '../../store/settings-store';
 
 const CLS: Record<TokenStatus, string> = { done: 'tok--ok', current: 'tok--cur', wrong: 'tok--bad', pending: '' };
 
@@ -18,6 +20,7 @@ export function OfflineTasmi({ ayahs }: { surah: number; ayahs: Ayah[] }) {
   const [state, setState] = useState<'idle' | 'loading' | 'recording' | 'checking'>('idle');
   const [progress, setProgress] = useState(0);
   const rec = useRef<{ stop: () => Promise<Float32Array> } | null>(null);
+  const model = useSettings((s) => s.asrModel);
   const a = ayahs[i];
 
   const expected = useMemo(() => tokens(a.t), [a]);
@@ -34,7 +37,7 @@ export function OfflineTasmi({ ayahs }: { surah: number; ayahs: Ayah[] }) {
     setHeard('');
     setState('loading');
     try {
-      await ensureWhisper((p) => setProgress(Math.round((p.progress ?? 0))));
+      await ensureWhisper(model, (p) => setProgress(Math.round((p.progress ?? 0))));
       rec.current = await startRecording();
       setState('recording');
     } catch {
@@ -50,6 +53,7 @@ export function OfflineTasmi({ ayahs }: { surah: number; ayahs: Ayah[] }) {
         <AccuracyRing value={accuracy(status)} />
         <MicButton active={state === 'recording'} onClick={toggle} disabled={state === 'loading' || state === 'checking'} />
       </div>
+      <Waveform active={state === 'recording'} />
       <p className="field__hint">
         {state === 'loading' ? `تنزيل النموذج… ${arabicNum(progress)}٪` :
          state === 'checking' ? 'جارٍ التحقّق…' :

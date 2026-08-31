@@ -2,11 +2,12 @@ import type { ReactNode } from 'react';
 import { AudioSettings } from '../audio';
 import { TafsirManager } from '../tafsir';
 import { AccountPanel } from '../auth';
+import { InstallButton } from '../install';
 import { ReaderSettings } from './reader-settings';
 import { ThemeSettings } from './theme-settings';
 import { NotifySettings } from './notify-settings';
 import { DataSettings } from './data-settings';
-import { TasmiSettings } from './tasmi-settings';
+import { ModelSettings } from './model-settings';
 
 function Section({ title, hint, children }: { title: string; hint: string; children: ReactNode }) {
   return (
@@ -24,6 +25,7 @@ export function SettingsScreen() {
   return (
     <section className="screen">
       <h1 className="screen__title">الإعدادات</h1>
+      <InstallButton block />
       <Section title="المظهر والعرض" hint="السمة، الخط، نمط عرض المصحف">
         <ThemeSettings />
       </Section>
@@ -42,8 +44,8 @@ export function SettingsScreen() {
       <Section title="التنبيهات" hint="الصلاة والأذكار والحفظ">
         <NotifySettings />
       </Section>
-      <Section title="التسميع دون إنترنت" hint="محرّك التعرّف على الصوت (متقدّم)">
-        <TasmiSettings />
+      <Section title="محرّك التسميع" hint="نموذج التعرّف على الصوت وتنزيله">
+        <ModelSettings />
       </Section>
       <Section title="البيانات والتخزين" hint="نسخ احتياطي وإعادة ضبط">
         <DataSettings />

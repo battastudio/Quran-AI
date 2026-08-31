@@ -1,5 +1,6 @@
 export interface Ayah {
   a: number; // number in surah
+  g: number; // global ayah number (1..6236) — for audio CDN
   t: string; // uthmani text
   p: number; // mushaf page
   j: number; // juz
@@ -27,21 +28,26 @@ export interface TafsirBook {
   name: string;
 }
 
-export type ThemeMode = 'auto' | 'light' | 'dark' | 'emerald' | 'sepia' | 'night';
+export type ThemeMode = 'auto' | 'light' | 'dark' | 'emerald' | 'royal' | 'midnight' | 'sepia' | 'night';
 export type ReaderView = 'scroll' | 'page' | 'focus' | 'cards';
 export type AyahFont = 'amiri' | 'system';
+export type SwipeDir = 'rtl' | 'ltr';
 
 export interface Settings {
   theme: ThemeMode;
   ayahFont: AyahFont;
   readerView: ReaderView;
-  reciter: string;
+  swipeDir: SwipeDir;
+  mushafPaper: boolean; // parchment page background in mushaf/page view
+  reciter: string; // ar.* audio edition id
+  audioBitrate: number; // 128 | 64 | 192
   tafsir: string; // active tafsir id ('muyassar' = bundled)
   fontSize: number; // ayah font px
   showWordHints: boolean;
   tajweed: boolean; // colored tajwīd reading mode
   calcMethod: string;
-  voskModelUrl: string; // optional offline Tasmi' model (.tar.gz URL); '' = online only
+  asrModel: string; // offline Tasmi' model id (whisper-*)
+  voskModelUrl: string; // optional Vosk model (.tar.gz URL); overrides whisper if set
   notify: {
     prayer: boolean;
     adhkar: boolean;

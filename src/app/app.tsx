@@ -15,6 +15,7 @@ import { useSettings } from '../store/settings-store';
 import { useReader } from '../store/reader-store';
 import { runReminders } from '../features/notifications';
 import { useAuth } from '../features/auth';
+import { useInstall } from '../features/install';
 
 const router = createHashRouter([
   {
@@ -42,6 +43,7 @@ export function App() {
       .hydrate()
       .then(() => runReminders());
     useAuth.getState().init();
+    useInstall.getState().init();
   }, []);
   return <RouterProvider router={router} />;
 }

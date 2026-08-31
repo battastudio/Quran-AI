@@ -12,6 +12,7 @@ import { MushafPageView } from './mushaf-page-view';
 import { FocusView } from './focus-view';
 import { AyahCardsView } from './ayah-cards-view';
 import { SurahPicker } from './surah-picker';
+import { SurahSwipe } from './surah-swipe';
 
 const VIEWS: { id: ReaderView; icon: string }[] = [
   { id: 'scroll', icon: 'list' },
@@ -23,6 +24,7 @@ const VIEWS: { id: ReaderView; icon: string }[] = [
 export function ReaderScreen() {
   const surah = useReader((s) => s.surah);
   const setSurah = useReader((s) => s.setSurah);
+  const setMark = useReader((s) => s.setMark);
   const view = useSettings((s) => s.readerView);
   const setView = useSettings((s) => s.set);
   const playQueue = useAudio((s) => s.play);
@@ -37,7 +39,7 @@ export function ReaderScreen() {
   const meta = list.find((s) => s.n === surah);
   async function playSurah() {
     const s = await getSurah(surah);
-    if (s) playQueue(s.ayahs.map((a) => ({ surah, ayah: a.a })));
+    if (s) playQueue(s.ayahs.map((a) => ({ surah, ayah: a.a, g: a.g })));
   }
 
   return (
@@ -59,15 +61,21 @@ export function ReaderScreen() {
               </button>
             ))}
           </div>
+          <button className="icon-btn" aria-label="ضع علامة القراءة" onClick={setMark}><Icon name="bookmark" /></button>
           <button className="icon-btn" aria-label="بحث" onClick={() => nav('/search')}><Icon name="search" /></button>
           <button className="icon-btn" aria-label="تشغيل السورة" onClick={playSurah}><Icon name="play" /></button>
         </div>
       </header>
 
-      {view === 'scroll' && <SurahView n={surah} />}
-      {view === 'page' && <MushafPageView n={surah} />}
-      {view === 'focus' && <FocusView n={surah} />}
-      {view === 'cards' && <AyahCardsView n={surah} />}
+      {view === 'page' ? (
+        <MushafPageView n={surah} />
+      ) : (
+        <SurahSwipe>
+          {view === 'scroll' && <SurahView n={surah} />}
+          {view === 'focus' && <FocusView n={surah} />}
+          {view === 'cards' && <AyahCardsView n={surah} />}
+        </SurahSwipe>
+      )}
 
       <SurahPicker
         open={pick}

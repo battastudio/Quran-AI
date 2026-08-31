@@ -6,12 +6,16 @@ export const DEFAULTS: Settings = {
   theme: 'auto',
   ayahFont: 'amiri',
   readerView: 'scroll',
-  reciter: 'Alafasy_128kbps',
+  swipeDir: 'rtl',
+  mushafPaper: true,
+  reciter: 'ar.alafasy',
+  audioBitrate: 128,
   tafsir: 'muyassar',
   fontSize: 30,
   showWordHints: true,
   tajweed: false,
   calcMethod: 'UmmAlQura',
+  asrModel: 'onnx-community/whisper-base',
   voskModelUrl: '',
   notify: { prayer: true, adhkar: true, kahf: true, fasting: false, hifz: true },
 };
@@ -56,6 +60,6 @@ export const useSettings = create<SettingsState>((set, get) => ({
 }));
 
 function pick(s: SettingsState): Settings {
-  const { theme, ayahFont, readerView, reciter, tafsir, fontSize, showWordHints, tajweed, calcMethod, voskModelUrl, notify } = s;
-  return { theme, ayahFont, readerView, reciter, tafsir, fontSize, showWordHints, tajweed, calcMethod, voskModelUrl, notify };
+  const { theme, ayahFont, readerView, swipeDir, mushafPaper, reciter, audioBitrate, tafsir, fontSize, showWordHints, tajweed, calcMethod, asrModel, voskModelUrl, notify } = s;
+  return { theme, ayahFont, readerView, swipeDir, mushafPaper, reciter, audioBitrate, tafsir, fontSize, showWordHints, tajweed, calcMethod, asrModel, voskModelUrl, notify };
 }

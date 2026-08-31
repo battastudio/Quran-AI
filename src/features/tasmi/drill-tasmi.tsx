@@ -9,6 +9,7 @@ import { listen, speechSupported } from './speech';
 import { accuracy, align, type TokenStatus } from './align';
 import { MicButton } from './mic-button';
 import { AccuracyRing } from './accuracy-ring';
+import { Waveform } from './waveform';
 
 const CLS: Record<TokenStatus, string> = { done: 'tok--ok', current: 'tok--cur', wrong: 'tok--bad', pending: '' };
 
@@ -40,8 +41,9 @@ export function DrillTasmi({ surah, ayahs }: { surah: number; ayahs: Ayah[] }) {
         <AccuracyRing value={accuracy(status)} />
         <MicButton active={live} onClick={toggle} disabled={!speechSupported()} />
       </div>
+      <Waveform active={live} />
       <div className="tasmi__controls">
-        <button className="btn btn--sm" onClick={() => play([{ surah, ayah: a.a }])}><Icon name="play" size={16} /> استمع</button>
+        <button className="btn btn--sm" onClick={() => play([{ surah, ayah: a.a, g: a.g }])}><Icon name="play" size={16} /> استمع</button>
         <button className="icon-btn" disabled={i <= 0} onClick={() => move(-1)}><Icon name="prev" /></button>
         <span>{arabicNum(a.a)} / {arabicNum(ayahs.length)}</span>
         <button className="icon-btn" disabled={i >= ayahs.length - 1} onClick={() => move(1)}><Icon name="next" /></button>

@@ -5,6 +5,7 @@ import { getSurah, tafsirFor } from '../../lib/quran';
 import { arabicNum } from '../../lib/format';
 import type { Ayah } from '../../lib/types';
 import { useSettings } from '../../store/settings-store';
+import { useReader } from '../../store/reader-store';
 
 // One swipeable card per ayah with its tafsir underneath.
 export function AyahCardsView({ n }: { n: number }) {
@@ -13,8 +14,10 @@ export function AyahCardsView({ n }: { n: number }) {
   const [dir, setDir] = useState(1);
   const [taf, setTaf] = useState<string | null>(null);
   const tafsirId = useSettings((s) => s.tafsir);
+  const markRead = useReader((s) => s.markRead);
 
   useEffect(() => { setI(0); void getSurah(n).then((s) => setAyahs(s?.ayahs ?? [])); }, [n]);
+  useEffect(() => { if (ayahs?.[i]) markRead(n, ayahs[i].a); }, [ayahs, i, n, markRead]);
   useEffect(() => {
     if (!ayahs?.[i]) return;
     setTaf(null);

@@ -8,6 +8,7 @@ import { savedCoords } from '../../lib/geo';
 import { useReader } from '../../store/reader-store';
 import { useSettings } from '../../store/settings-store';
 import { useKhatmah } from '../khatmah';
+import { InstallButton } from '../install';
 import { dueCards } from '../hifz';
 import { computeTimes } from '../prayer';
 import { VerseOfDay } from './verse-of-day';
@@ -16,6 +17,7 @@ export function HomeScreen() {
   const nav = useNavigate();
   const goTo = useReader((s) => s.goTo);
   const lastRead = useReader((s) => s.lastRead);
+  const mark = useReader((s) => s.mark);
   const method = useSettings((s) => s.calcMethod);
   const plan = useKhatmah((s) => s.plan);
   const hydrateK = useKhatmah((s) => s.hydrate);
@@ -41,11 +43,18 @@ export function HomeScreen() {
     <section className="screen">
       <h1 className="screen__title">نور القرآن</h1>
       <p className="home-sub">السلام عليكم ورحمة الله</p>
+      <InstallButton block />
       <div className="home-grid">
         {lastRead && (
           <button className="home-card" onClick={() => { goTo(lastRead.surah, lastRead.ayah); nav('/mushaf'); }}>
             <span className="home-card__k">متابعة القراءة</span>
-            <b>{names[lastRead.surah] ?? `سورة ${arabicNum(lastRead.surah)}`}</b>
+            <b>{names[lastRead.surah] ?? `سورة ${arabicNum(lastRead.surah)}`} · {arabicNum(lastRead.ayah)}</b>
+          </button>
+        )}
+        {mark && (
+          <button className="home-card" onClick={() => { goTo(mark.surah, mark.ayah); nav('/mushaf'); }}>
+            <span className="home-card__k">العودة إلى العلامة</span>
+            <b>{names[mark.surah] ?? `سورة ${arabicNum(mark.surah)}`} · {arabicNum(mark.ayah)}</b>
           </button>
         )}
         <button className="home-card" onClick={() => nav('/hifz')}>

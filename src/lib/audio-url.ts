@@ -1,12 +1,12 @@
 const pad = (n: number) => String(n).padStart(3, '0');
 
-// everyayah.com/data/<reciter>/<sss><aaa>.mp3
-export function ayahAudioUrl(reciter: string, surah: number, ayah: number): string {
-  return `https://everyayah.com/data/${reciter}/${pad(surah)}${pad(ayah)}.mp3`;
+// Ayah recitation — cdn.islamic.network, 176 Arabic editions, global ayah number.
+// https://cdn.islamic.network/quran/audio/<bitrate>/<edition>/<g>.mp3
+export function ayahAudioUrl(edition: string, g: number, bitrate = 128): string {
+  return `https://cdn.islamic.network/quran/audio/${bitrate}/${edition}/${g}.mp3`;
 }
 
-// Per-word pronunciation. pos = 1-based word index within the ayah.
-// audio.qurancdn.com/wbw/<sss>_<aaa>_<www>.mp3
+// Per-word pronunciation (Quran.com wbw CDN). pos = 1-based word index.
 export function wordAudioUrl(surah: number, ayah: number, pos: number): string {
   return `https://audio.qurancdn.com/wbw/${pad(surah)}_${pad(ayah)}_${pad(pos)}.mp3`;
 }

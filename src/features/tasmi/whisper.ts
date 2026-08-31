@@ -3,15 +3,23 @@
 // it works fully offline after the first load. Lazy-imported (heavy).
 type Transcriber = (audio: Float32Array, opts: object) => Promise<{ text: string }>;
 let transcriber: Transcriber | null = null;
+let loadedId = '';
 
-export async function ensureWhisper(onProgress?: (p: { progress?: number }) => void): Promise<void> {
-  if (transcriber) return;
+export const WHISPER_MODELS = [
+  { id: 'onnx-community/whisper-tiny', label: 'صغير جدًا (~٤٠م.ب) — الأسرع' },
+  { id: 'onnx-community/whisper-base', label: 'أساسي (~٧٥م.ب) — موصى به' },
+  { id: 'onnx-community/whisper-small', label: 'متوسّط (~٢٥٠م.ب) — الأدقّ' },
+];
+
+export async function ensureWhisper(modelId: string, onProgress?: (p: { progress?: number }) => void): Promise<void> {
+  if (transcriber && loadedId === modelId) return;
   const { pipeline } = await import('@huggingface/transformers');
   const hasGPU = 'gpu' in navigator;
-  transcriber = (await pipeline('automatic-speech-recognition', 'onnx-community/whisper-base', {
+  transcriber = (await pipeline('automatic-speech-recognition', modelId, {
     device: hasGPU ? 'webgpu' : 'wasm',
     progress_callback: onProgress as never,
   })) as unknown as Transcriber;
+  loadedId = modelId;
 }
 
 export async function transcribe(audio: Float32Array): Promise<string> {

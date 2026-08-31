@@ -7,6 +7,7 @@ import { listen, speechSupported } from './speech';
 import { accuracy, align, type TokenStatus } from './align';
 import { MicButton } from './mic-button';
 import { AccuracyRing } from './accuracy-ring';
+import { Waveform } from './waveform';
 
 const CLS: Record<TokenStatus, string> = { done: 'tok--ok', current: 'tok--cur', wrong: 'tok--bad', pending: '' };
 
@@ -43,7 +44,13 @@ export function LiveTasmi({ ayahs, memorize }: { surah: number; ayahs: Ayah[]; m
         <AccuracyRing value={accuracy(status)} />
         <MicButton active={live} onClick={toggle} disabled={!speechSupported()} />
       </div>
+      <Waveform active={live} />
       {!speechSupported() && <p className="error">هذا المحرّك يتطلّب Chrome. جرّب وضع «دون إنترنت».</p>}
+      {!live && heard && (
+        <p className="tasmi-summary">
+          النتيجة: دقّة {arabicNum(accuracy(status))}٪ · أخطاء {arabicNum(status.filter((s) => s === 'wrong').length)}
+        </p>
+      )}
       <div className={hide ? 'tasmi-text tasmi-text--hidden' : 'tasmi-text'}>
         {ayahs.map((a, ai) => (
           <p key={a.a} className="ayah__text">

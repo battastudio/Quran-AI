@@ -29,7 +29,7 @@ async function main() {
     type: s.revelationType === 'Meccan' ? 'مكية' : 'مدنية',
     count: s.numberOfAyahs,
     page: s.ayahs[0].page,
-    ayahs: s.ayahs.map((a) => ({ a: a.numberInSurah, t: clean(a.text), p: a.page, j: a.juz })),
+    ayahs: s.ayahs.map((a) => ({ a: a.numberInSurah, g: a.number, t: clean(a.text), p: a.page, j: a.juz })),
   }));
 
   // reader payload (with ayahs) + light index (no ayahs, for lists)
@@ -57,29 +57,22 @@ async function main() {
     .map((c) => ({ title: c.category, items: c.array.map((x) => clean(x.text)) }));
   await writeFile(new URL('adhkar.json', OUT), JSON.stringify(adhkar));
 
-  await writeFile(new URL('reciters.json', OUT), JSON.stringify(RECITERS));
-  await writeFile(new URL('tafsir-catalog.json', OUT), JSON.stringify(TAFSIRS));
+  // All Arabic reciters (audio via cdn.islamic.network/quran/audio/<bitrate>/<id>/<g>.mp3)
+  console.log('fetching reciter (audio) editions…');
+  const audio = await getJson(`${API}/edition?format=audio&language=ar`);
+  const reciters = audio.map((e) => ({ id: e.identifier, name: e.name }));
+  await writeFile(new URL('reciters.json', OUT), JSON.stringify(reciters));
 
-  console.log(`done: ${surahs.length} surahs, ${Object.keys(muyassar).length} tafsir, ${adhkar.length} adhkar categories`);
+  // All Arabic tafsirs (muyassar bundled; rest downloadable at runtime).
+  console.log('fetching tafsir editions…');
+  const tafsirEds = await getJson(`${API}/edition?type=tafsir&language=ar`);
+  const catalog = tafsirEds
+    .filter((e) => e.identifier !== 'ar.muyassar')
+    .map((e) => ({ id: e.identifier, name: e.name }));
+  await writeFile(new URL('tafsir-catalog.json', OUT), JSON.stringify(catalog));
+
+  console.log(`done: ${surahs.length} surahs, ${reciters.length} reciters, ${catalog.length + 1} tafsirs, ${adhkar.length} adhkar`);
 }
-
-// everyayah.com/data/<folder>/<sss><aaa>.mp3
-const RECITERS = [
-  { id: 'Alafasy_128kbps', name: 'مشاري العفاسي' },
-  { id: 'Husary_128kbps', name: 'محمود خليل الحصري' },
-  { id: 'Abdul_Basit_Murattal_192kbps', name: 'عبد الباسط عبد الصمد (مرتل)' },
-  { id: 'Minshawy_Murattal_128kbps', name: 'محمد صديق المنشاوي (مرتل)' },
-  { id: 'Abdurrahmaan_As-Sudais_192kbps', name: 'عبد الرحمن السديس' },
-  { id: 'Abu_Bakr_Ash-Shaatree_128kbps', name: 'أبو بكر الشاطري' },
-];
-
-// Downloadable at runtime: GET api.alquran.cloud/v1/quran/<id> → cache in IndexedDB.
-const TAFSIRS = [
-  { id: 'ar.jalalayn', name: 'تفسير الجلالين' },
-  { id: 'ar.qurtubi', name: 'تفسير القرطبي' },
-  { id: 'ar.waseet', name: 'التفسير الوسيط' },
-  { id: 'ar.miqbas', name: 'تنوير المقباس (ابن عباس)' },
-];
 
 main().catch((e) => {
   console.error(e);

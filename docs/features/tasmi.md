@@ -11,13 +11,17 @@ follow the text rather than open-transcribe. Word-accuracy only — **no tajwīd
 - **offline** (`offline-tasmi.tsx` + `whisper.ts`) — record an ayah, on-device
   **Whisper** checks it. Fully offline after first model load.
 
-## Offline model (where it comes from)
-`whisper.ts` lazy-loads **transformers.js** and the model
-**`onnx-community/whisper-base`** (multilingual → Arabic), which auto-downloads
-from Hugging Face and caches (WebGPU→WASM). Nothing to host. Chunk is excluded
-from precache (fetched on first use). Alternative streaming engine: **Vosk**
+Enhancements: real mic **waveform** (`waveform.tsx`, Web Audio AnalyserNode),
+**session summary** (accuracy + mistakes) after a live run, continuous auto-scroll.
+
+## Offline model (chooseable + downloadable)
+Settings → محرّك التسميع picks a **Whisper** model and downloads it:
+`onnx-community/whisper-tiny` (~40 MB) · `whisper-base` (~75 MB, default) ·
+`whisper-small` (~250 MB). `whisper.ts` lazy-loads transformers.js; models
+auto-download from Hugging Face and cache (WebGPU→WASM) — nothing to host; the
+chunk is excluded from precache. Alternative streaming engine: **Vosk**
 (`vosk.ts`) — Arabic models from https://alphacephei.com/vosk/models (`.zip`,
-repackage to CORS `.tar.gz` and host yourself), URL set in Settings.
+repackage to CORS `.tar.gz` and host yourself), URL set in the same panel.
 
 ## Honest ceiling
 Tarteel-grade tajwīd verification needs a purpose-trained model (proprietary) —
