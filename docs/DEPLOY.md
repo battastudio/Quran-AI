@@ -32,15 +32,26 @@ npm run build && npm run preview
 # open the printed URL, then DevTools → Network → Offline → reload: still works.
 ```
 
-## Optional: cloud login + sync (Firebase)
-The app runs fully local-only without this. To enable cross-device sync:
-1. Create a Firebase project → add a **Web app**.
-2. Enable **Authentication** (Google + Email/Password) and **Cloud Firestore**.
-3. Copy `.env.example` → `.env` and fill the `VITE_FIREBASE_*` values.
-4. For GitHub Pages, add the same vars as repo **Actions secrets/variables** and
-   pass them to the build step (or commit a `.env` — these are client-public keys).
-5. Firestore rule so users only touch their own doc:
-   `match /users/{uid} { allow read, write: if request.auth.uid == uid; }`
+## Optional: cloud login + sync (Firebase — free, no card)
+The app runs fully local-only without this. Firebase's **Spark plan is free and
+needs no payment/credit card**; Firestore's free quota dwarfs a per-user JSON doc.
+To enable cross-device sync:
+1. console.firebase.google.com → **Add project** (Spark/free).
+2. Add a **Web app** → copy the config (apiKey, projectId, appId, …).
+3. **Authentication → Sign-in method:** enable **Google** and **Email/Password**.
+4. **Firestore Database → Create** (production mode). Rules tab:
+   ```
+   rules_version = '2';
+   service cloud.firestore {
+     match /databases/{db}/documents {
+       match /users/{uid} { allow read, write: if request.auth.uid == uid; }
+     }
+   }
+   ```
+5. Copy `.env.example` → `.env`, fill `VITE_FIREBASE_*`. For GitHub Pages, add the
+   same as repo **Actions variables** and pass to the build (client-public keys).
+Sync then runs on sign-in, on tab refocus, and every 60s (local-first; only
+progress metadata, never audio).
 
 ## Notes
 - Routing uses hash (`/#/...`) so no 404 rewrite is needed on Pages.

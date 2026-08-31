@@ -1,23 +1,24 @@
-# Tasmi' (recitation follow-along) — EXPERIMENTAL
+# Tasmi' (recitation) — 4 modes · EXPERIMENTAL
 
-`src/features/tasmi/` — labeled تجريبي in the UI.
+`src/features/tasmi/` (center **mic** in the bottom bar). Mode in `tasmi-store.ts`.
+All modes use forced alignment (`align.ts`, tested) against the known ayah, so we
+follow the text rather than open-transcribe. Word-accuracy only — **no tajwīd verdict**.
 
-## How it works
-Because we already know the expected ayah, this is **forced alignment**, not open
-transcription — the key advantage over generic ASR.
-- `align.ts` (pure, tested) aligns heard tokens to the expected token stream in
-  order, tolerant to a one-char slip (Levenshtein ≤1). Returns per-word status
-  `done | current | wrong | pending` + a moving cursor + `accuracy()`.
-- `tasmi-screen.tsx` follows along live: words turn green as recited, the current
-  word is highlighted, it auto-scrolls, and shows a session accuracy %.
-- **Online engine:** browser `SpeechRecognition` (`speech.ts`, `ar-SA`).
-- **Offline engine (optional):** `vosk.ts` — lazy-loaded Vosk WASM + an Arabic
-  model whose `.tar.gz` URL the user sets in Settings → "التسميع دون إنترنت".
-  Streams mic audio through the same `align` pipeline.
+- **follow** (`live-tasmi.tsx`) — live follow-along (Web Speech), words go green in
+  order, auto-scroll, accuracy ring + animated mic.
+- **memorize** — same engine, text blurred while reciting; reveals + marks misses.
+- **drill** (`drill-tasmi.tsx`) — one ayah: listen (reciter) → recite → compare → next.
+- **offline** (`offline-tasmi.tsx` + `whisper.ts`) — record an ayah, on-device
+  **Whisper** checks it. Fully offline after first model load.
 
-## Honest ceiling (do not oversell)
-Word-accuracy + follow-along only — **no tajwīd verdict**. Off-the-shelf
-recognition (browser or generic Vosk) isn't trained on Quranic Arabic and can't
-grade tajwīd; that needs a purpose-trained model, out of scope for a static PWA.
-No small official Arabic Vosk model exists (available ones are large), so offline
-is an advanced/experimental opt-in, not a default. Never marketed as verified.
+## Offline model (where it comes from)
+`whisper.ts` lazy-loads **transformers.js** and the model
+**`onnx-community/whisper-base`** (multilingual → Arabic), which auto-downloads
+from Hugging Face and caches (WebGPU→WASM). Nothing to host. Chunk is excluded
+from precache (fetched on first use). Alternative streaming engine: **Vosk**
+(`vosk.ts`) — Arabic models from https://alphacephei.com/vosk/models (`.zip`,
+repackage to CORS `.tar.gz` and host yourself), URL set in Settings.
+
+## Honest ceiling
+Tarteel-grade tajwīd verification needs a purpose-trained model (proprietary) —
+out of scope for a static PWA. This is word-accuracy + follow-along, labeled تجريبي.

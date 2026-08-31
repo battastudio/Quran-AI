@@ -3,6 +3,7 @@ import { AudioSettings } from '../audio';
 import { TafsirManager } from '../tafsir';
 import { AccountPanel } from '../auth';
 import { ReaderSettings } from './reader-settings';
+import { ThemeSettings } from './theme-settings';
 import { NotifySettings } from './notify-settings';
 import { DataSettings } from './data-settings';
 import { TasmiSettings } from './tasmi-settings';
@@ -23,6 +24,9 @@ export function SettingsScreen() {
   return (
     <section className="screen">
       <h1 className="screen__title">الإعدادات</h1>
+      <Section title="المظهر والعرض" hint="السمة، الخط، نمط عرض المصحف">
+        <ThemeSettings />
+      </Section>
       <Section title="الحساب والمزامنة" hint="حفظ تقدّمك عبر الأجهزة">
         <AccountPanel />
       </Section>

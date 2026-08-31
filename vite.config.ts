@@ -29,9 +29,9 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,woff2}'],
-        // Vosk offline-ASR chunk is a large WASM bundle loaded only on demand —
-        // keep it out of precache (fetched + runtime-cached when the user opts in).
-        globIgnores: ['**/vosk-*.js'],
+        // Offline-ASR chunks (Vosk / transformers.js Whisper) are large and loaded
+        // only on demand — keep them out of precache (fetched when the user opts in).
+        globIgnores: ['**/vosk-*.js', '**/transformers*.js', '**/ort-*.js', '**/*.wasm'],
         runtimeCaching: [
           {
             // Bundled Quran/tafsir JSON: immutable, cache on first load → offline after.

@@ -4,6 +4,8 @@ import { loadSettings, saveSettings } from '../lib/db';
 
 export const DEFAULTS: Settings = {
   theme: 'auto',
+  ayahFont: 'amiri',
+  readerView: 'scroll',
   reciter: 'Alafasy_128kbps',
   tafsir: 'muyassar',
   fontSize: 30,
@@ -21,10 +23,17 @@ interface SettingsState extends Settings {
 }
 
 function applyTheme(theme: Settings['theme']) {
-  const dark =
-    theme === 'dark' ||
-    (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-  document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+  const resolved =
+    theme === 'auto'
+      ? window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : 'light'
+      : theme;
+  document.documentElement.dataset.theme = resolved;
+}
+
+function applyAyahFont(font: Settings['ayahFont']) {
+  document.documentElement.dataset.ayahfont = font;
 }
 
 export const useSettings = create<SettingsState>((set, get) => ({
@@ -34,17 +43,19 @@ export const useSettings = create<SettingsState>((set, get) => ({
     const saved = await loadSettings();
     const merged = { ...DEFAULTS, ...saved, notify: { ...DEFAULTS.notify, ...saved?.notify } };
     applyTheme(merged.theme);
+    applyAyahFont(merged.ayahFont);
     set({ ...merged, hydrated: true });
   },
   set: (patch) => {
     const next = { ...pick(get()), ...patch };
     if (patch.theme) applyTheme(patch.theme);
+    if (patch.ayahFont) applyAyahFont(patch.ayahFont);
     set(patch);
     void saveSettings(next);
   },
 }));
 
 function pick(s: SettingsState): Settings {
-  const { theme, reciter, tafsir, fontSize, showWordHints, tajweed, calcMethod, voskModelUrl, notify } = s;
-  return { theme, reciter, tafsir, fontSize, showWordHints, tajweed, calcMethod, voskModelUrl, notify };
+  const { theme, ayahFont, readerView, reciter, tafsir, fontSize, showWordHints, tajweed, calcMethod, voskModelUrl, notify } = s;
+  return { theme, ayahFont, readerView, reciter, tafsir, fontSize, showWordHints, tajweed, calcMethod, voskModelUrl, notify };
 }

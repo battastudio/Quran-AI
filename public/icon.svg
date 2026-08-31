@@ -7,9 +7,9 @@
   </defs>
   <rect width="512" height="512" fill="url(#bg)"/>
   <!-- 8-point geometric star (safe zone) -->
-  <g transform="translate(256 168)" fill="none" stroke="#efe7c8" stroke-width="7" opacity="0.9">
-    <rect x="-34" y="-34" width="68" height="68" transform="rotate(0)"/>
-    <rect x="-34" y="-34" width="68" height="68" transform="rotate(45)"/>
+  <g transform="translate(256 166)" fill="none" stroke="#c9a54a" stroke-width="8" opacity="0.95">
+    <rect x="-36" y="-36" width="72" height="72" transform="rotate(0)"/>
+    <rect x="-36" y="-36" width="72" height="72" transform="rotate(45)"/>
   </g>
   <!-- open mushaf -->
   <g transform="translate(256 316)">

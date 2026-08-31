@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Icon } from '../../components';
 import { words } from '../../lib/quran';
 import { ayahMark } from '../../lib/format';
 import { toggleBookmark } from '../../lib/db';
@@ -44,17 +45,17 @@ export function AyahBlock({ surah, ayah, playing, bookmarked }: Props) {
         <span className="ayah__mark">{ayahMark(ayah.a)}</span>
       </p>
       <div className="ayah__actions">
-        <button className="icon-btn" aria-label="استماع" onClick={() => playFrom([{ surah, ayah: ayah.a }])}>▶</button>
-        <button className="icon-btn" aria-label="تفسير" onClick={() => showTafsir(surah, ayah.a)}>ⓘ</button>
+        <button className="icon-btn" aria-label="استماع" onClick={() => playFrom([{ surah, ayah: ayah.a }])}><Icon name="play" /></button>
+        <button className="icon-btn" aria-label="تفسير" onClick={() => showTafsir(surah, ayah.a)}><Icon name="info" /></button>
         <button
           className={marked ? 'icon-btn icon-btn--on' : 'icon-btn'}
           aria-label="حفظ إشارة"
           onClick={async () => setMarked(await toggleBookmark(surah, ayah.a))}
         >
-          ★
+          <Icon name="bookmark" fill={marked} />
         </button>
-        <button className="icon-btn" aria-label="ملاحظة" onClick={() => showNote(surah, ayah.a)}>📝</button>
-        <button className="icon-btn" aria-label="مشاركة" onClick={() => void shareAyahImage(ayah.t, `سورة ${surah} — الآية ${ayah.a}`)}>↗</button>
+        <button className="icon-btn" aria-label="ملاحظة" onClick={() => showNote(surah, ayah.a)}><Icon name="note" /></button>
+        <button className="icon-btn" aria-label="مشاركة" onClick={() => void shareAyahImage(ayah.t, `سورة ${surah} — الآية ${ayah.a}`)}><Icon name="share" /></button>
         <button
           className={memo ? 'icon-btn icon-btn--on' : 'icon-btn'}
           aria-label="أضف للحفظ"
@@ -63,7 +64,7 @@ export function AyahBlock({ surah, ayah, playing, bookmarked }: Props) {
             setMemo(true);
           }}
         >
-          ＋
+          <Icon name="plus" />
         </button>
       </div>
     </div>

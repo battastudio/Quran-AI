@@ -29,6 +29,11 @@ export const useAuth = create<AuthState>((set, get) => ({
         set({ user });
         if (user) void get().sync();
       });
+      // keep devices converged: re-sync periodically + when the tab refocuses
+      setInterval(() => { if (get().user) void get().sync(); }, 60_000);
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden && get().user) void get().sync();
+      });
     })();
   },
   signInGoogle: async () => {

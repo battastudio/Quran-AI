@@ -27,10 +27,14 @@ export interface TafsirBook {
   name: string;
 }
 
-export type ThemeMode = 'light' | 'dark' | 'auto';
+export type ThemeMode = 'auto' | 'light' | 'dark' | 'emerald' | 'sepia' | 'night';
+export type ReaderView = 'scroll' | 'page' | 'focus' | 'cards';
+export type AyahFont = 'amiri' | 'system';
 
 export interface Settings {
   theme: ThemeMode;
+  ayahFont: AyahFont;
+  readerView: ReaderView;
   reciter: string;
   tafsir: string; // active tafsir id ('muyassar' = bundled)
   fontSize: number; // ayah font px

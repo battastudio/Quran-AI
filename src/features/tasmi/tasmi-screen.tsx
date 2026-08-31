@@ -1,107 +1,50 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Spinner } from '../../components';
-import { getSurah, words } from '../../lib/quran';
-import { tokens } from '../../lib/normalize';
+import { getSurah } from '../../lib/quran';
 import { arabicNum } from '../../lib/format';
 import type { Ayah } from '../../lib/types';
 import { useReader } from '../../store/reader-store';
-import { useSettings } from '../../store/settings-store';
-import { listen, speechSupported } from './speech';
-import { startVosk, type VoskSession } from './vosk';
-import { accuracy, align, type TokenStatus } from './align';
+import { useTasmi, type TasmiMode } from './tasmi-store';
+import { LiveTasmi } from './live-tasmi';
+import { DrillTasmi } from './drill-tasmi';
+import { OfflineTasmi } from './offline-tasmi';
 
-const CLS: Record<TokenStatus, string> = { done: 'tok--ok', current: 'tok--cur', wrong: 'tok--bad', pending: '' };
+const MODES: { id: TasmiMode; label: string }[] = [
+  { id: 'follow', label: 'تتبّع' },
+  { id: 'memorize', label: 'اختبار الحفظ' },
+  { id: 'drill', label: 'تدريب آية' },
+  { id: 'offline', label: 'دون إنترنت' },
+];
 
 export function TasmiScreen() {
   const surah = useReader((s) => s.surah);
-  const modelUrl = useSettings((s) => s.voskModelUrl);
+  const { mode, setMode } = useTasmi();
   const [ayahs, setAyahs] = useState<Ayah[] | null>(null);
-  const [heard, setHeard] = useState('');
-  const [live, setLive] = useState(false);
-  const [err, setErr] = useState<string | null>(null);
-  const online = useRef<{ stop: () => void } | null>(null);
-  const offline = useRef<VoskSession | null>(null);
-  const finals = useRef('');
 
   useEffect(() => {
     void getSurah(surah).then((s) => setAyahs(s?.ayahs ?? []));
-    return () => stop();
   }, [surah]);
-
-  // Flatten to one expected token stream; keep per-ayah slice offsets.
-  const { expected, offsets } = useMemo(() => {
-    const expected: string[] = [];
-    const offsets: number[] = [];
-    for (const a of ayahs ?? []) {
-      offsets.push(expected.length);
-      expected.push(...tokens(a.t));
-    }
-    return { expected, offsets };
-  }, [ayahs]);
-
-  const { status, cursor } = useMemo(() => align(expected, tokens(heard)), [expected, heard]);
-
-  useEffect(() => {
-    document.getElementById(`tw-${cursor}`)?.scrollIntoView({ block: 'center', behavior: 'smooth' });
-  }, [cursor]);
-
-  function stop() {
-    online.current?.stop();
-    offline.current?.stop();
-    online.current = offline.current = null;
-    setLive(false);
-  }
-
-  async function start() {
-    setErr(null);
-    setHeard('');
-    finals.current = '';
-    if (modelUrl) {
-      try {
-        offline.current = await startVosk(modelUrl, (t, final) => {
-          if (final) finals.current += ' ' + t;
-          setHeard(finals.current + ' ' + (final ? '' : t));
-        });
-        setLive(true);
-      } catch {
-        setErr('تعذّر تشغيل المحرّك دون إنترنت. تحقّق من رابط النموذج في الإعدادات.');
-      }
-      return;
-    }
-    online.current = listen((t) => setHeard(t));
-    if (online.current) setLive(true);
-    else setErr('متصفّحك لا يدعم التعرّف على الصوت. استخدم Chrome أو أضِف نموذجًا للعمل دون إنترنت.');
-  }
-
-  if (!ayahs) return <Spinner />;
-  const engine = modelUrl ? 'دون إنترنت' : speechSupported() ? 'المتصفّح (يتطلّب إنترنت)' : 'غير مدعوم';
 
   return (
     <section className="screen">
-      <h1 className="screen__title">التسميع (تجريبي) · دقّة {arabicNum(accuracy(status))}٪</h1>
-      <p className="field__hint">
-        تتبّع تلاوتك كلمة بكلمة (المحرّك: {engine}). تتحقّق من الكلمات فقط ولا تحكم على أحكام التجويد.
-      </p>
-      {err && <p className="error">{err}</p>}
-      <button className={live ? 'btn btn--danger' : 'btn'} onClick={live ? stop : start}>
-        {live ? '■ إيقاف' : '● ابدأ التسميع'}
-      </button>
-      <p className="field__hint">سورة {arabicNum(surah)} — غيّرها من تبويب المصحف.</p>
-      <div className="tasmi-text">
-        {ayahs.map((a, ai) => (
-          <p key={a.a} className="ayah__text">
-            {words(a.t).map((w, wi) => {
-              const gi = offsets[ai] + wi;
-              return (
-                <span key={wi} id={`tw-${gi}`} className={`tok ${CLS[status[gi] ?? 'pending']}`}>
-                  {w}{' '}
-                </span>
-              );
-            })}
-            <span className="ayah__mark">{arabicNum(a.a)}</span>
-          </p>
+      <h1 className="screen__title">التسميع</h1>
+      <div className="tasmi-modes">
+        {MODES.map((m) => (
+          <button key={m.id} className={mode === m.id ? 'chip chip--on' : 'chip'} onClick={() => setMode(m.id)}>
+            {m.label}
+          </button>
         ))}
       </div>
+      <p className="field__hint">سورة {arabicNum(surah)} — غيّرها من تبويب المصحف. ميزة تجريبية تتحقّق من الكلمات فقط.</p>
+      {!ayahs ? (
+        <Spinner />
+      ) : mode === 'drill' ? (
+        <DrillTasmi surah={surah} ayahs={ayahs} />
+      ) : mode === 'offline' ? (
+        <OfflineTasmi surah={surah} ayahs={ayahs} />
+      ) : (
+        <LiveTasmi surah={surah} ayahs={ayahs} memorize={mode === 'memorize'} />
+      )}
     </section>
   );
 }

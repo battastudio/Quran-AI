@@ -1,3 +1,4 @@
+import { Icon } from '../../components';
 import { arabicNum } from '../../lib/format';
 import { useAudio } from '../../store/audio-store';
 
@@ -11,7 +12,7 @@ export function MiniPlayer() {
   return (
     <div className="mini-player">
       <button className="icon-btn" aria-label={isPlaying ? 'إيقاف مؤقت' : 'تشغيل'} onClick={toggle}>
-        {isPlaying ? '⏸' : '▶'}
+        <Icon name={isPlaying ? 'pause' : 'play'} />
       </button>
       <span className="mini-player__label">
         {arabicNum(playing.surah)}:{arabicNum(playing.ayah)}
@@ -30,7 +31,7 @@ export function MiniPlayer() {
       >
         {speed}×
       </button>
-      <button className="icon-btn" aria-label="إيقاف" onClick={stop}>✕</button>
+      <button className="icon-btn" aria-label="إيقاف" onClick={stop}><Icon name="close" /></button>
     </div>
   );
 }
