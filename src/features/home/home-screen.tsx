@@ -39,7 +39,8 @@ export function HomeScreen() {
 
   return (
     <section className="screen">
-      <h1 className="screen__title">السلام عليكم</h1>
+      <h1 className="screen__title">نور القرآن</h1>
+      <p className="home-sub">السلام عليكم ورحمة الله</p>
       <div className="home-grid">
         {lastRead && (
           <button className="home-card" onClick={() => { goTo(lastRead.surah, lastRead.ayah); nav('/mushaf'); }}>
@@ -72,6 +73,14 @@ export function HomeScreen() {
         <button className="home-card" onClick={() => nav('/search')}>
           <span className="home-card__k">البحث</span>
           <b>ابحث في القرآن</b>
+        </button>
+        <button className="home-card" onClick={() => nav('/adhkar')}>
+          <span className="home-card__k">الأذكار</span>
+          <b>الصباح والمساء</b>
+        </button>
+        <button className="home-card" onClick={() => nav('/bookmarks')}>
+          <span className="home-card__k">المحفوظات</span>
+          <b>الإشارات والملاحظات</b>
         </button>
       </div>
       <VerseOfDay

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { mergeProfiles, type Profile } from './merge';
 
-const base: Profile = { updatedAt: 0, bookmarks: [], hifz: [], streak: [] };
+const base: Profile = { updatedAt: 0, bookmarks: [], notes: [], hifz: [], streak: [] };
 
 describe('mergeProfiles', () => {
   it('unions bookmarks by key', () => {

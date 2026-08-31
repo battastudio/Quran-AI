@@ -70,6 +70,22 @@ function playIndex(i: number, set: SetFn, get: GetFn) {
   a.onended = () => playIndex(i + 1, set, get);
   void a.play();
   set({ playing: track, isPlaying: true });
+  mediaSession(i, track, set, get);
+}
+
+// Lock-screen / hardware media controls.
+function mediaSession(i: number, track: Track, set: SetFn, get: GetFn) {
+  const ms = navigator.mediaSession;
+  if (!ms) return;
+  ms.metadata = new MediaMetadata({
+    title: `الآية ${track.ayah}`,
+    artist: `سورة ${track.surah}`,
+    album: 'نور القرآن',
+  });
+  ms.setActionHandler('play', () => get().toggle());
+  ms.setActionHandler('pause', () => get().toggle());
+  ms.setActionHandler('nexttrack', () => playIndex(i + 1, set, get));
+  ms.setActionHandler('previoustrack', () => playIndex(i - 1, set, get));
 }
 
 type SetFn = (p: Partial<AudioState>) => void;

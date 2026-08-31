@@ -59,6 +59,13 @@ async function muyassar(): Promise<Record<string, string>> {
   return muyassarCache;
 }
 
+let tajweedCache: Record<string, string> | null = null;
+// Tajwīd-marked text for an ayah (loaded on demand; used by the colored reader).
+export async function tajweedFor(surah: number, ayah: number): Promise<string | null> {
+  if (!tajweedCache) tajweedCache = await fetchJson<Record<string, string>>('quran-tajweed.json');
+  return tajweedCache[`${surah}:${ayah}`] ?? null;
+}
+
 // Tafsir text for an ayah from the active book. 'muyassar' is bundled; other
 // ids are runtime-downloaded editions cached in IndexedDB.
 export async function tafsirFor(bookId: string, surah: number, ayah: number): Promise<string | null> {

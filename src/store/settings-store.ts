@@ -8,6 +8,7 @@ export const DEFAULTS: Settings = {
   tafsir: 'muyassar',
   fontSize: 30,
   showWordHints: true,
+  tajweed: false,
   calcMethod: 'UmmAlQura',
   voskModelUrl: '',
   notify: { prayer: true, adhkar: true, kahf: true, fasting: false, hifz: true },
@@ -44,6 +45,6 @@ export const useSettings = create<SettingsState>((set, get) => ({
 }));
 
 function pick(s: SettingsState): Settings {
-  const { theme, reciter, tafsir, fontSize, showWordHints, calcMethod, voskModelUrl, notify } = s;
-  return { theme, reciter, tafsir, fontSize, showWordHints, calcMethod, voskModelUrl, notify };
+  const { theme, reciter, tafsir, fontSize, showWordHints, tajweed, calcMethod, voskModelUrl, notify } = s;
+  return { theme, reciter, tafsir, fontSize, showWordHints, tajweed, calcMethod, voskModelUrl, notify };
 }

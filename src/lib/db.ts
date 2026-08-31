@@ -6,21 +6,38 @@ interface Schema extends DBSchema {
   bookmarks: { key: string; value: { key: string; surah: number; ayah: number; at: number } };
   hifz: { key: string; value: HifzCard };
   tafsir: { key: string; value: { id: string; data: Record<string, string> } };
+  notes: { key: string; value: { key: string; surah: number; ayah: number; text: string; at: number } };
 }
 
 let dbp: Promise<IDBPDatabase<Schema>> | null = null;
 
 function db() {
   if (!dbp)
-    dbp = openDB<Schema>('al-furqan', 1, {
-      upgrade(d) {
-        d.createObjectStore('kv');
-        d.createObjectStore('bookmarks', { keyPath: 'key' });
-        d.createObjectStore('hifz', { keyPath: 'key' });
-        d.createObjectStore('tafsir', { keyPath: 'id' });
+    dbp = openDB<Schema>('al-furqan', 2, {
+      upgrade(d, oldVersion) {
+        if (oldVersion < 1) {
+          d.createObjectStore('kv');
+          d.createObjectStore('bookmarks', { keyPath: 'key' });
+          d.createObjectStore('hifz', { keyPath: 'key' });
+          d.createObjectStore('tafsir', { keyPath: 'id' });
+        }
+        if (oldVersion < 2) d.createObjectStore('notes', { keyPath: 'key' });
       },
     });
   return dbp;
+}
+
+export async function allNotes() {
+  return (await db()).getAll('notes');
+}
+export async function getNote(surah: number, ayah: number) {
+  return (await db()).get('notes', `${surah}:${ayah}`);
+}
+export async function setNote(surah: number, ayah: number, text: string) {
+  const d = await db();
+  const key = `${surah}:${ayah}`;
+  if (text.trim()) await d.put('notes', { key, surah, ayah, text: text.trim(), at: Date.now() });
+  else await d.delete('notes', key);
 }
 
 export async function loadSettings(): Promise<Partial<Settings> | undefined> {
@@ -82,6 +99,7 @@ export async function exportData() {
     lastRead: await d.get('kv', 'lastRead'),
     bookmarks: await d.getAll('bookmarks'),
     hifz: await d.getAll('hifz'),
+    notes: await d.getAll('notes'),
   };
 }
 
@@ -91,10 +109,11 @@ export async function importData(data: Awaited<ReturnType<typeof exportData>>) {
   if (data.lastRead) await d.put('kv', data.lastRead, 'lastRead');
   for (const b of data.bookmarks ?? []) await d.put('bookmarks', b);
   for (const c of data.hifz ?? []) await d.put('hifz', c);
+  for (const n of data.notes ?? []) await d.put('notes', n);
 }
 
 export async function resetAll() {
   const d = await db();
-  for (const store of ['kv', 'bookmarks', 'hifz', 'tafsir'] as const) await d.clear(store);
+  for (const store of ['kv', 'bookmarks', 'hifz', 'tafsir', 'notes'] as const) await d.clear(store);
   for (const name of await caches.keys()) await caches.delete(name);
 }

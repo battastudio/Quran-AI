@@ -14,8 +14,16 @@ The app is a static PWA. `npm run build` outputs `dist/`, which GitHub Pages ser
 `https://battastudio.github.io/Quran-AI/`
 
 ## Install on mobile
-Open the URL in Safari (iOS) or Chrome (Android) → **Add to Home Screen**.
-Launches standalone, works offline after first load.
+- **Android/Chrome:** the app shows an in-app «تثبيت» button (install prompt).
+- **iOS/Safari:** the app shows Add-to-Home-Screen instructions (Share ⬆ → «أضف
+  إلى الشاشة الرئيسية») — Apple doesn't allow a direct prompt.
+- Launches standalone, works offline after first load.
+
+### A real App Store / Play Store binary (optional)
+A PWA can't be listed on the stores directly. Wrap this deployed URL with
+**PWABuilder** (pwabuilder.com) → generates a signed Android **.aab/APK** (TWA)
+and an iOS project. That's the path to store distribution; the PWA itself already
+"installs" and runs offline on both platforms via the browser.
 
 ## Local verify
 ```sh

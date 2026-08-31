@@ -11,8 +11,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icon.svg', 'apple-touch-icon.png'],
       manifest: {
-        name: 'الفرقان — القرآن الكريم',
-        short_name: 'الفرقان',
+        name: 'نور القرآن',
+        short_name: 'نور القرآن',
         description: 'مصحف تفاعلي يعمل بدون إنترنت: قراءة، تلاوة، تفسير، مواقيت الصلاة والحفظ.',
         lang: 'ar',
         dir: 'rtl',

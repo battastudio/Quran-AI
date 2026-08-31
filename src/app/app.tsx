@@ -9,6 +9,8 @@ import { PrayerScreen } from '../features/prayer';
 import { HifzScreen } from '../features/hifz';
 import { SearchScreen } from '../features/search';
 import { KhatmahScreen } from '../features/khatmah';
+import { BookmarksScreen } from '../features/bookmarks';
+import { AdhkarScreen } from '../features/adhkar';
 import { useSettings } from '../store/settings-store';
 import { useReader } from '../store/reader-store';
 import { runReminders } from '../features/notifications';
@@ -25,6 +27,8 @@ const router = createHashRouter([
       { path: '/hifz', element: <HifzScreen /> },
       { path: '/search', element: <SearchScreen /> },
       { path: '/khatmah', element: <KhatmahScreen /> },
+      { path: '/bookmarks', element: <BookmarksScreen /> },
+      { path: '/adhkar', element: <AdhkarScreen /> },
       { path: '/settings', element: <SettingsScreen /> },
     ],
   },

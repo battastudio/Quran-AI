@@ -1,10 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { registerSW } from 'virtual:pwa-register';
 import { App } from './app/app';
 import './styles/theme.css';
 
-registerSW({ immediate: true });
+// SW registration is handled by <UpdateToast/> via useRegisterSW.
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

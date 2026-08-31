@@ -1,6 +1,7 @@
 import { Toggle } from '../../components';
 import { arabicNum } from '../../lib/format';
 import { useSettings } from '../../store/settings-store';
+import { RULES } from '../../lib/tajweed';
 import type { ThemeMode } from '../../lib/types';
 
 const THEMES: { id: ThemeMode; label: string }[] = [
@@ -10,7 +11,7 @@ const THEMES: { id: ThemeMode; label: string }[] = [
 ];
 
 export function ReaderSettings() {
-  const { theme, fontSize, showWordHints, set } = useSettings();
+  const { theme, fontSize, showWordHints, tajweed, set } = useSettings();
   return (
     <div className="stack">
       <div className="field">
@@ -42,6 +43,19 @@ export function ReaderSettings() {
         checked={showWordHints}
         onChange={(v) => set({ showWordHints: v })}
       />
+      <Toggle label="تلوين أحكام التجويد" checked={tajweed} onChange={(v) => set({ tajweed: v })} />
+      {tajweed && (
+        <div className="tajweed-legend">
+          {Object.values(RULES)
+            .filter((r, i, arr) => arr.findIndex((x) => x.name === r.name) === i)
+            .map((r) => (
+              <span key={r.name} className="tajweed-legend__item">
+                <span className="tajweed-legend__dot" style={{ background: r.color }} />
+                {r.name}
+              </span>
+            ))}
+        </div>
+      )}
     </div>
   );
 }

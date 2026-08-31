@@ -2,6 +2,9 @@ import { NavLink, Outlet } from 'react-router-dom';
 import { MiniPlayer } from '../features/audio';
 import { WordSheet } from '../features/words';
 import { TafsirSheet } from '../features/tafsir';
+import { NoteSheet } from '../features/bookmarks';
+import { InstallPrompt, UpdateToast } from '../features/install';
+import { Onboarding } from '../features/onboarding';
 
 const tabs = [
   { to: '/', label: 'الرئيسية', end: true },
@@ -17,6 +20,8 @@ export function Shell() {
       <main className="shell__content">
         <Outlet />
       </main>
+      <InstallPrompt />
+      <UpdateToast />
       <MiniPlayer />
       <nav className="shell__nav">
         {tabs.map((t) => (
@@ -32,6 +37,8 @@ export function Shell() {
       </nav>
       <WordSheet />
       <TafsirSheet />
+      <NoteSheet />
+      <Onboarding />
     </div>
   );
 }

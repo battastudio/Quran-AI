@@ -35,6 +35,7 @@ export interface Settings {
   tafsir: string; // active tafsir id ('muyassar' = bundled)
   fontSize: number; // ayah font px
   showWordHints: boolean;
+  tajweed: boolean; // colored tajwīd reading mode
   calcMethod: string;
   voskModelUrl: string; // optional offline Tasmi' model (.tar.gz URL); '' = online only
   notify: {

@@ -260,6 +260,45 @@ select, input[type='range'] { width: 100%; padding: 8px; font-size: 15px; font-f
 .account-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .sync-status { color: var(--muted); font-size: 13px; }
 
+.home-sub { color: var(--muted); margin: -6px 0 14px; }
+
+/* tajweed legend */
+.tajweed-legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+.tajweed-legend__item { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+.tajweed-legend__dot { width: 14px; height: 14px; border-radius: 4px; display: inline-block; }
+
+/* notes */
+.note-input { width: 100%; padding: 12px; font-size: 16px; font-family: inherit; border: 1px solid var(--border); border-radius: 12px; background: var(--bg); color: var(--text); margin-bottom: 12px; resize: vertical; }
+.bm-list { list-style: none; margin: 0; padding: 0; }
+.bm-item { padding: 12px 8px; border-bottom: 1px solid var(--border); }
+.bm-item__head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.bm-item__head span { display: flex; gap: 10px; }
+.bm-item__note { color: var(--muted); margin: 6px 0 0; line-height: 1.8; }
+
+/* adhkar */
+.adhkar-cats { list-style: none; margin: 0; padding: 0; }
+.adhkar-cat { width: 100%; text-align: start; cursor: pointer; }
+.dhikr { padding: 14px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); margin-bottom: 10px; cursor: pointer; }
+.dhikr__text { line-height: 2.2; margin: 0 0 8px; font-size: 19px; }
+.dhikr__count { color: var(--accent); font-size: 13px; }
+
+/* install banner + toast */
+.install-banner, .toast {
+  position: fixed; inset-inline: 10px; z-index: 30;
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; border-radius: 12px;
+  background: var(--surface); border: 1px solid var(--border);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+}
+.install-banner { bottom: calc(var(--nav-h) + env(safe-area-inset-bottom, 0px) + 10px); }
+.toast { bottom: calc(var(--nav-h) + env(safe-area-inset-bottom, 0px) + 10px); }
+.install-banner span, .toast span { flex: 1; font-size: 14px; }
+
+/* onboarding */
+.onboarding { position: fixed; inset: 0; z-index: 50; background: var(--bg); display: grid; place-items: center; padding: 20px; }
+.onboarding__card { width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 12px; text-align: center; }
+.onboarding__card h2 { font-size: 26px; margin: 0; }
+
 /* spinner */
 .spinner { display: flex; align-items: center; gap: 10px; justify-content: center; padding: 40px 0; color: var(--muted); }
 .spinner__dot { width: 18px; height: 18px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }

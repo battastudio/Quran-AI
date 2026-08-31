@@ -1,4 +1,4 @@
-# الفرقان — Al-Furqan AI
+# نور القرآن — Nour Al Quran
 
 An offline-first **Arabic Quran PWA** — installable on mobile, deployable to
 GitHub Pages, works with zero connectivity after first load.

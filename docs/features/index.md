@@ -1,7 +1,7 @@
 # Features
 
-Al-Furqan AI is an offline-first Arabic Quran PWA. All features run on-device;
-sacred text is bundled and never model-generated (see `../../CLAUDE.md`).
+نور القرآن (Nour Al Quran) is an offline-first Arabic Quran PWA. All features run
+on-device; sacred text is bundled and never model-generated (see `../../CLAUDE.md`).
 
 | Feature | Doc | Offline |
 |---|---|---|
@@ -16,6 +16,9 @@ sacred text is bundled and never model-generated (see `../../CLAUDE.md`).
 | Memorization (SM-2) | [hifz.md](hifz.md) | ✅ |
 | Khatmah reading plan | [khatmah.md](khatmah.md) | ✅ |
 | Account & sync (optional) | [account.md](account.md) | ✅ local; sync needs Firebase |
+| Tajwīd-colored reading | [tajweed.md](tajweed.md) | ✅ after first load |
+| Bookmarks & notes | [bookmarks.md](bookmarks.md) | ✅ |
+| Adhkar · share · install · more | [extras.md](extras.md) | ✅ (share needs share API) |
 | Settings hub | [settings.md](settings.md) | ✅ |
 | Tasmi' follow-along | [tasmi.md](tasmi.md) | ⚠️ online, or offline w/ Vosk model |
 

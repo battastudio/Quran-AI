@@ -9,7 +9,7 @@ export function DataSettings() {
     const url = URL.createObjectURL(new Blob([JSON.stringify(data)], { type: 'application/json' }));
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'al-furqan-backup.json';
+    a.download = 'nour-al-quran-backup.json';
     a.click();
     URL.revokeObjectURL(url);
   }

@@ -44,10 +44,23 @@ async function main() {
     for (const a of s.ayahs) muyassar[`${s.number}:${a.numberInSurah}`] = clean(a.text);
   await writeFile(new URL('tafsir-muyassar.json', OUT), JSON.stringify(muyassar));
 
+  console.log('fetching quran-tajweed (colored) …');
+  const tj = await getJson(`${API}/quran/quran-tajweed`);
+  const tajweed = {};
+  for (const s of tj.surahs) for (const a of s.ayahs) tajweed[`${s.number}:${a.numberInSurah}`] = a.text;
+  await writeFile(new URL('quran-tajweed.json', OUT), JSON.stringify(tajweed));
+
+  console.log('fetching adhkar (Hisn al-Muslim) …');
+  const raw = await (await fetch('https://raw.githubusercontent.com/rn0x/Adhkar-json/main/adhkar.json')).json();
+  const adhkar = raw
+    .filter((c) => Array.isArray(c.array) && c.array.length)
+    .map((c) => ({ title: c.category, items: c.array.map((x) => clean(x.text)) }));
+  await writeFile(new URL('adhkar.json', OUT), JSON.stringify(adhkar));
+
   await writeFile(new URL('reciters.json', OUT), JSON.stringify(RECITERS));
   await writeFile(new URL('tafsir-catalog.json', OUT), JSON.stringify(TAFSIRS));
 
-  console.log(`done: ${surahs.length} surahs, ${Object.keys(muyassar).length} tafsir entries`);
+  console.log(`done: ${surahs.length} surahs, ${Object.keys(muyassar).length} tafsir, ${adhkar.length} adhkar categories`);
 }
 
 // everyayah.com/data/<folder>/<sss><aaa>.mp3
