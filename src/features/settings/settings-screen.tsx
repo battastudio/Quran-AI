@@ -1,26 +1,49 @@
-// The hub. Each section is filled in as its feature lands; every downloadable
-// or toggleable capability in the app must surface a control here (see CLAUDE.md).
-const sections = [
-  { key: 'audio', title: 'التلاوة والصوت', hint: 'اختيار القارئ وتنزيل السور' },
-  { key: 'tafsir', title: 'التفسير', hint: 'تنزيل كتب التفسير واختيار المعتمد' },
-  { key: 'reader', title: 'المصحف', hint: 'حجم الخط، السمة، معاني الكلمات' },
-  { key: 'notifications', title: 'التنبيهات', hint: 'الصلاة، الأذكار، الحفظ' },
-  { key: 'hifz', title: 'الحفظ', hint: 'الهدف اليومي وجدول المراجعة' },
-  { key: 'data', title: 'البيانات والتخزين', hint: 'مسح التنزيلات، تصدير التقدّم' },
-];
+import type { ReactNode } from 'react';
+import { AudioSettings } from '../audio';
+import { TafsirManager } from '../tafsir';
+import { AccountPanel } from '../auth';
+import { ReaderSettings } from './reader-settings';
+import { NotifySettings } from './notify-settings';
+import { DataSettings } from './data-settings';
+import { TasmiSettings } from './tasmi-settings';
+
+function Section({ title, hint, children }: { title: string; hint: string; children: ReactNode }) {
+  return (
+    <details className="section">
+      <summary className="section__head">
+        <span className="section__title">{title}</span>
+        <span className="section__hint">{hint}</span>
+      </summary>
+      <div className="section__body">{children}</div>
+    </details>
+  );
+}
 
 export function SettingsScreen() {
   return (
     <section className="screen">
       <h1 className="screen__title">الإعدادات</h1>
-      <ul className="settings-list">
-        {sections.map((s) => (
-          <li key={s.key} className="settings-list__item">
-            <span className="settings-list__title">{s.title}</span>
-            <span className="settings-list__hint">{s.hint}</span>
-          </li>
-        ))}
-      </ul>
+      <Section title="الحساب والمزامنة" hint="حفظ تقدّمك عبر الأجهزة">
+        <AccountPanel />
+      </Section>
+      <Section title="التلاوة والصوت" hint="القارئ وتنزيل السور">
+        <AudioSettings />
+      </Section>
+      <Section title="التفسير" hint="تنزيل الكتب واختيار المعتمد">
+        <TafsirManager />
+      </Section>
+      <Section title="المصحف" hint="السمة وحجم الخط">
+        <ReaderSettings />
+      </Section>
+      <Section title="التنبيهات" hint="الصلاة والأذكار والحفظ">
+        <NotifySettings />
+      </Section>
+      <Section title="التسميع دون إنترنت" hint="محرّك التعرّف على الصوت (متقدّم)">
+        <TasmiSettings />
+      </Section>
+      <Section title="البيانات والتخزين" hint="نسخ احتياطي وإعادة ضبط">
+        <DataSettings />
+      </Section>
     </section>
   );
 }

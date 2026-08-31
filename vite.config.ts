@@ -4,12 +4,12 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 // base must match the GitHub Pages repo sub-path (https://<user>.github.io/quran_ai/).
 export default defineConfig({
-  base: '/quran_ai/',
+  base: '/Quran-AI/',
   plugins: [
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg'],
+      includeAssets: ['icon.svg', 'apple-touch-icon.png'],
       manifest: {
         name: 'الفرقان — القرآن الكريم',
         short_name: 'الفرقان',
@@ -21,19 +21,32 @@ export default defineConfig({
         display: 'standalone',
         background_color: '#0f1511',
         theme_color: '#0f1511',
-        // ponytail: SVG icon for now — add real PNG 192/512 launcher art (batta-icon
-        // skill or a designer) before store-quality release; iOS prefers PNG.
         icons: [
-          { src: 'favicon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any' },
-          { src: 'favicon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'maskable' },
+          { src: 'icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+          { src: 'icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+          { src: 'icon-512-maskable.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,woff2,json}'],
-        // Cache reciter audio at runtime so downloaded surahs play offline.
+        globPatterns: ['**/*.{js,css,html,svg,woff2}'],
+        // Vosk offline-ASR chunk is a large WASM bundle loaded only on demand —
+        // keep it out of precache (fetched + runtime-cached when the user opts in).
+        globIgnores: ['**/vosk-*.js'],
         runtimeCaching: [
           {
-            urlPattern: ({ url }) => url.href.includes('everyayah.com'),
+            // Bundled Quran/tafsir JSON: immutable, cache on first load → offline after.
+            urlPattern: ({ url }) => url.pathname.includes('/data/'),
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'quran-data',
+              expiration: { maxEntries: 50 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+          {
+            // Reciter + per-word audio: cache so downloaded content plays offline.
+            urlPattern: ({ url }) =>
+              url.href.includes('everyayah.com') || url.href.includes('qurancdn.com'),
             handler: 'CacheFirst',
             options: {
               cacheName: 'reciter-audio',

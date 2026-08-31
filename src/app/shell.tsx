@@ -1,18 +1,23 @@
 import { NavLink, Outlet } from 'react-router-dom';
+import { MiniPlayer } from '../features/audio';
+import { WordSheet } from '../features/words';
+import { TafsirSheet } from '../features/tafsir';
 
 const tabs = [
-  { to: '/', label: 'المصحف', end: true },
+  { to: '/', label: 'الرئيسية', end: true },
+  { to: '/mushaf', label: 'المصحف', end: false },
+  { to: '/prayer', label: 'الصلاة', end: false },
+  { to: '/hifz', label: 'الحفظ', end: false },
   { to: '/settings', label: 'الإعدادات', end: false },
 ];
 
-// Root layout: content + bottom tab bar. More tabs (audio, prayer, hifz)
-// get added here as those features land.
 export function Shell() {
   return (
     <div className="shell">
       <main className="shell__content">
         <Outlet />
       </main>
+      <MiniPlayer />
       <nav className="shell__nav">
         {tabs.map((t) => (
           <NavLink
@@ -25,6 +30,8 @@ export function Shell() {
           </NavLink>
         ))}
       </nav>
+      <WordSheet />
+      <TafsirSheet />
     </div>
   );
 }

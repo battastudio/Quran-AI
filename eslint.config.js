@@ -2,7 +2,7 @@ import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  { ignores: ['dist', 'dev-dist'] },
+  { ignores: ['dist', 'dev-dist', 'scripts', 'public'] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
