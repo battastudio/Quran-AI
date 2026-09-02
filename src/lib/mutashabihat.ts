@@ -5,7 +5,7 @@ import { tokens } from './normalize';
 let shingles: Map<string, number[]> | null = null;
 let flat: { s: number; a: number }[] = [];
 
-const grams = (ws: string[]) => {
+export const grams = (ws: string[]) => {
   const out: string[] = [];
   for (let i = 0; i + 4 <= ws.length; i++) out.push(ws.slice(i, i + 4).join(' '));
   return out;

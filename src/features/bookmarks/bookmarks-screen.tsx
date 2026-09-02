@@ -14,6 +14,8 @@ export function BookmarksScreen() {
   const [highlights, setHighlights] = useState<HL[]>([]);
   const [names, setNames] = useState<Record<number, string>>({});
   const [folder, setFolder] = useState('all');
+  const [editing, setEditing] = useState<string | null>(null);
+  const [folderText, setFolderText] = useState('');
   const goTo = useReader((s) => s.goTo);
   const noteOpen = useNoteSheet((s) => s.open);
   const nav = useNavigate();
@@ -50,11 +52,17 @@ export function BookmarksScreen() {
             <div className="bm-item__head">
               <button className="link" onClick={() => open(r.surah, r.ayah)}>{name(r.surah)} · {arabicNum(r.ayah)}</button>
               <span>
-                <button className="link" onClick={async () => { const f = prompt('اسم المجلّد', r.folder ?? ''); if (f !== null) { await setBookmarkFolder(r.surah, r.ayah, f); void load(); } }}>مجلّد</button>
+                <button className="link" onClick={() => { setEditing(editing === r.key ? null : r.key); setFolderText(r.folder ?? ''); }}>مجلّد</button>
                 <button className="link" onClick={async () => { await toggleBookmark(r.surah, r.ayah); void load(); }}>حذف</button>
               </span>
             </div>
-            {r.folder && <span className="bm-item__folder">📁 {r.folder}</span>}
+            {editing === r.key && (
+              <div className="bm-item__folder-edit">
+                <input className="search-input" placeholder="اسم المجلّد" value={folderText} onChange={(e) => setFolderText(e.target.value)} autoFocus />
+                <button className="btn btn--sm" onClick={async () => { await setBookmarkFolder(r.surah, r.ayah, folderText); setEditing(null); void load(); }}>حفظ</button>
+              </div>
+            )}
+            {r.folder && editing !== r.key && <span className="bm-item__folder">📁 {r.folder}</span>}
             {r.note && <p className="bm-item__note">{r.note}</p>}
           </li>
         ))}

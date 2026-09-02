@@ -1,7 +1,18 @@
 import { create } from 'zustand';
 import type { User } from 'firebase/auth';
 import { cloudEnabled, loadFirebase } from '../../lib/firebase';
-import { syncNow } from '../../lib/sync';
+import { syncNow, watchRemote } from '../../lib/sync';
+import { useSettings } from '../../store/settings-store';
+import { useReader } from '../../store/reader-store';
+
+let unwatch: (() => void) | null = null;
+
+// Re-hydrate memory-held stores after a live remote apply (db-backed screens
+// refresh on their own next open).
+function reHydrate() {
+  void useSettings.getState().hydrate();
+  void useReader.getState().hydrate();
+}
 
 type Status = 'idle' | 'syncing' | 'synced' | 'error';
 
@@ -27,7 +38,13 @@ export const useAuth = create<AuthState>((set, get) => ({
       const { onAuthStateChanged } = await import('firebase/auth');
       onAuthStateChanged(auth, (user) => {
         set({ user });
-        if (user) void get().sync();
+        unwatch?.();
+        unwatch = null;
+        if (user) {
+          void get().sync();
+          // live cross-device apply; re-hydrate stores when remote data arrives
+          void watchRemote(user.uid, reHydrate).then((u) => { unwatch = u; });
+        }
       });
       // keep devices converged: re-sync periodically + when the tab refocuses
       setInterval(() => { if (get().user) void get().sync(); }, 60_000);

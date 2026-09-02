@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { createHashRouter, RouterProvider } from 'react-router-dom';
+import { createHashRouter, Navigate, RouterProvider } from 'react-router-dom';
 import { Shell } from './shell';
 import { HomeScreen } from '../features/home';
 import { ReaderScreen } from '../features/reader';
@@ -49,6 +49,7 @@ const router = createHashRouter([
       { path: '/calendar', element: <CalendarScreen /> },
       { path: '/recite-lab', element: <ReciteScreen /> },
       { path: '/settings', element: <SettingsScreen /> },
+      { path: '*', element: <Navigate to="/" replace /> },
     ],
   },
 ]);

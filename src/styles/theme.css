@@ -91,29 +91,11 @@ body {
   padding-bottom: calc(var(--nav-h) + env(safe-area-inset-bottom, 0px) + 16px);
 }
 
-.shell__nav {
-  position: fixed;
-  inset-inline: 0;
-  bottom: 0;
-  height: calc(var(--nav-h) + env(safe-area-inset-bottom, 0px));
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-  display: flex;
-  background: var(--surface);
-  border-top: 1px solid var(--border);
-}
+.crash { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 24px; text-align: center; }
+.bm-item__folder-edit { display: flex; gap: 8px; margin-top: 8px; }
+.bm-item__folder-edit input { flex: 1; padding: 8px; }
 
-.shell__tab {
-  flex: 1;
-  display: grid;
-  place-items: center;
-  text-decoration: none;
-  color: var(--muted);
-  font-size: 15px;
-}
-
-.shell__tab--active { color: var(--accent); font-weight: 700; }
-
-/* redesigned bottom bar */
+/* bottom bar */
 .bar {
   position: fixed; inset-inline: 0; bottom: 0; z-index: 20;
   height: calc(var(--nav-h) + env(safe-area-inset-bottom, 0px));
@@ -152,8 +134,7 @@ body {
   line-height: 2;
 }
 
-.settings-list { list-style: none; margin: 0; padding: 0; }
-
+/* adhkar category card (also used as a generic list item) */
 .settings-list__item {
   display: flex;
   flex-direction: column;
@@ -164,9 +145,6 @@ body {
   border-radius: 12px;
   margin-bottom: 10px;
 }
-
-.settings-list__title { font-weight: 700; }
-.settings-list__hint { color: var(--muted); font-size: 13px; }
 
 /* buttons & bits */
 .btn {
@@ -433,7 +411,6 @@ select, input[type='range'] { width: 100%; padding: 8px; font-size: 15px; font-f
 .ring text { font-family: var(--font-ui); }
 .waveform { display: block; margin: 0 auto; width: 220px; height: 54px; }
 .tasmi-summary { text-align: center; font-weight: 700; color: var(--accent); background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 10px; }
-.reciter-select { width: 100%; margin-top: 8px; }
 .reciter-picker { display: flex; flex-direction: column; gap: 8px; }
 .reciter-list { list-style: none; margin: 0; padding: 0; max-height: 260px; overflow-y: auto; border: 1px solid var(--border); border-radius: 12px; }
 .reciter-row { display: flex; align-items: center; gap: 8px; padding: 4px 6px 4px 10px; border-bottom: 1px solid var(--border); }

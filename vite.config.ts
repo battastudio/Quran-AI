@@ -12,16 +12,22 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icon.svg', 'apple-touch-icon.png'],
       manifest: {
+        id: '/Quran-AI/',
         name: 'نور القرآن',
         short_name: 'نور القرآن',
         description: 'مصحف تفاعلي يعمل بدون إنترنت: قراءة، تلاوة، تفسير، مواقيت الصلاة والحفظ.',
         lang: 'ar',
         dir: 'rtl',
+        categories: ['education', 'books', 'lifestyle'],
         start_url: '.',
         scope: '.',
         display: 'standalone',
         background_color: '#0f1511',
         theme_color: '#0f1511',
+        screenshots: [
+          { src: 'screenshot-1.png', sizes: '1080x1920', type: 'image/png', form_factor: 'narrow' },
+          { src: 'screenshot-2.png', sizes: '1080x1920', type: 'image/png', form_factor: 'narrow' },
+        ],
         icons: [
           { src: 'icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
           { src: 'icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
