@@ -9,7 +9,12 @@ self.onmessage = async (e: MessageEvent) => {
   try {
     if (msg.type === 'load') {
       if (pipe && loaded === msg.model) return post({ type: 'ready' });
-      const { pipeline } = await import('@huggingface/transformers');
+      const { pipeline, env } = await import('@huggingface/transformers');
+      env.allowLocalModels = false;
+      // GitHub Pages doesn't set COOP/COEP → no SharedArrayBuffer → force
+      // single-threaded WASM so onnxruntime can init reliably.
+      const wasm = env.backends?.onnx?.wasm;
+      if (wasm) wasm.numThreads = 1;
       pipe = (await pipeline('automatic-speech-recognition', msg.model!, {
         device: 'wasm',
         progress_callback: ((p: { progress?: number }) => post({ type: 'progress', progress: p.progress ?? 0 })) as never,

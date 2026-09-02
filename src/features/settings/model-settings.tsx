@@ -7,17 +7,17 @@ export function ModelSettings() {
   const { asrModel, voskModelUrl, set } = useSettings();
   const [progress, setProgress] = useState<number | null>(null);
   const [ready, setReady] = useState(false);
-  const [err, setErr] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
 
   async function download() {
-    setErr(false);
+    setErr(null);
     setReady(false);
     setProgress(0);
     try {
       await ensureWhisper(asrModel, (p) => setProgress(Math.round(p.progress ?? 0)));
       setReady(true);
-    } catch {
-      setErr(true);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : String(e));
     } finally {
       setProgress(null);
     }
@@ -32,10 +32,18 @@ export function ModelSettings() {
         </select>
       </label>
       <button className="btn btn--sm" disabled={progress !== null} onClick={download}>
-        {progress !== null ? `جارٍ التنزيل… ${progress}٪` : ready ? 'تم التنزيل ✓' : 'تنزيل النموذج'}
+        {progress !== null ? `جارٍ التنزيل… ${progress}٪` : ready ? 'تم التنزيل ✓' : err ? 'إعادة المحاولة' : 'تنزيل النموذج'}
       </button>
-      {err && <p className="error">تعذّر التنزيل. تحقّق من الاتصال.</p>}
-      <p className="field__hint">يُنزَّل النموذج مرة واحدة ويُخزَّن للعمل دون إنترنت. يُستخدم في وضع «دون إنترنت» بالتسميع.</p>
+      {err && (
+        <p className="error">
+          تعذّر التنزيل: {err}
+          <br />أعد المحاولة (يُكمل من حيث توقّف)، أو اختر نموذجًا أخفّ.
+        </p>
+      )}
+      <p className="field__hint">
+        يُنزَّل النموذج مرة واحدة ويُخزَّن للعمل دون إنترنت. النماذج الثقيلة قد تفشل على
+        الأجهزة الضعيفة أو الشبكات البطيئة — والأوضاع المتّصلة بالإنترنت تعمل دون أي تنزيل.
+      </p>
 
       <label className="field">
         <span>بديل متقدّم: رابط نموذج Vosk (.tar.gz)</span>

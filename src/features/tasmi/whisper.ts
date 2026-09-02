@@ -5,9 +5,9 @@ let ready = false;
 let loadedModel = '';
 
 export const WHISPER_MODELS = [
-  { id: 'onnx-community/whisper-tiny', label: 'صغير جدًا (~٤٠م.ب) — الأسرع' },
-  { id: 'onnx-community/whisper-base', label: 'أساسي (~٧٥م.ب) — موصى به' },
-  { id: 'onnx-community/whisper-small', label: 'متوسّط (~٢٥٠م.ب) — الأدقّ' },
+  { id: 'onnx-community/whisper-tiny', label: 'الأخفّ (~٤٠م.ب) — الأكثر نجاحًا · موصى به' },
+  { id: 'onnx-community/whisper-base', label: 'متوازن (~٧٥م.ب)' },
+  { id: 'onnx-community/whisper-small', label: 'الأدقّ (~٢٥٠م.ب) — ثقيل، قد يفشل على الأجهزة الضعيفة' },
 ];
 
 function getWorker(): Worker {

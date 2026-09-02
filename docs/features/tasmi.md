@@ -21,6 +21,14 @@ The offline Whisper model runs in a **Web Worker** (`whisper-worker.ts`) so the 
 never freezes during download/inference; the client (`whisper.ts`) shows clear
 states (download % → preparing → listening/checking).
 
+### Download reliability
+GitHub Pages doesn't set COOP/COEP → no cross-origin isolation → no `SharedArrayBuffer`,
+so onnxruntime is forced to **single-threaded WASM** (`env.backends.onnx.wasm.numThreads
+= 1`) or the model fails to init mid-download. The default model is **whisper-tiny**
+(~40 MB, most reliable on phones); base/small are heavier and may fail on weak
+devices/networks. The Settings download button shows the **real error** and retries
+resume from cache. Online Tasmi' modes need no download.
+
 ## Offline model (chooseable + downloadable)
 Settings → محرّك التسميع picks a **Whisper** model and downloads it:
 `onnx-community/whisper-tiny` (~40 MB) · `whisper-base` (~75 MB, default) ·

@@ -25,6 +25,9 @@ const P: Record<string, string> = {
   check: 'M4 12l5 5L20 6',
   clock: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2',
   copy: 'M9 9h11v11H9zM5 15H4V4h11v1',
+  user: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM5 21a7 7 0 0 1 14 0',
+  bell: 'M6 9a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6M10 21a2 2 0 0 0 4 0',
+  palette: 'M12 3a9 9 0 1 0 1 18 2 2 0 0 0 1-3.5 2 2 0 0 1 1.5-3.5H18a3 3 0 0 0 3-3 8 8 0 0 0-9-5zM7.5 12h.01M10 8h.01M14 8h.01',
 };
 
 interface Props {

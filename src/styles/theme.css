@@ -311,11 +311,16 @@ select, input[type='range'] { width: 100%; padding: 8px; font-size: 15px; font-f
 .toggle__track::after { content: ''; position: absolute; inset-inline-start: 3px; top: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: transform 0.15s; }
 .toggle input:checked + .toggle__track { background: var(--accent); }
 .toggle input:checked + .toggle__track::after { transform: translateX(-18px); }
-.section { border: 1px solid var(--border); border-radius: 12px; margin-bottom: 10px; background: var(--surface); }
-.section__head { display: flex; flex-direction: column; gap: 3px; padding: 14px; cursor: pointer; }
+.section { border: 1px solid var(--border); border-radius: 14px; margin-bottom: 10px; background: var(--surface); overflow: hidden; transition: border-color 0.2s; }
+.section--open { border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); }
+.section__head { display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px; cursor: pointer; background: none; border: none; color: var(--text); text-align: start; }
+.section__icon { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 10px; background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent); flex-shrink: 0; }
+.section__meta { display: flex; flex-direction: column; gap: 2px; flex: 1; }
 .section__title { font-weight: 700; }
 .section__hint { color: var(--muted); font-size: 13px; }
-.section__body { padding: 0 14px 14px; }
+.section__chevron { color: var(--muted); transform: rotate(180deg); transition: transform 0.25s; }
+.section__chevron--open { transform: rotate(0deg); }
+.section__body { padding: 4px 14px 16px; }
 .dl-list { list-style: none; margin: 0; padding: 0; max-height: 320px; overflow-y: auto; }
 
 /* prayer & qibla */

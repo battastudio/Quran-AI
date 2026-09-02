@@ -15,7 +15,7 @@ export const DEFAULTS: Settings = {
   showWordHints: true,
   tajweed: false,
   calcMethod: 'UmmAlQura',
-  asrModel: 'onnx-community/whisper-base',
+  asrModel: 'onnx-community/whisper-tiny',
   voskModelUrl: '',
   notify: { prayer: true, adhkar: true, kahf: true, fasting: false, hifz: true },
 };
