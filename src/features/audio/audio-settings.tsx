@@ -1,41 +1,26 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getSurah, surahList } from '../../lib/quran';
 import { arabicNum } from '../../lib/format';
 import { deleteSurah, downloadSurah, downloadedSurahs } from '../../lib/audio-cache';
-import type { Reciter, SurahMeta } from '../../lib/types';
+import type { SurahMeta } from '../../lib/types';
 import { useSettings } from '../../store/settings-store';
 import { reciterBitrate } from '../../store/audio-store';
+import { ReciterPicker } from './reciter-picker';
 
-// Popular reciters pinned to the top of the searchable list.
-const PINNED = ['ar.alafasy', 'ar.abdurrahmaansudais', 'ar.abdulbasitmurattal', 'ar.minshawi', 'ar.husary'];
-
-const BASE = import.meta.env.BASE_URL;
 const BITRATES = [64, 128, 192];
 
-// Reciter choice (searchable, 176) + bitrate + per-surah offline download.
+// Reciter choice (searchable + preview) + bitrate + per-surah offline download.
 export function AudioSettings() {
   const reciter = useSettings((s) => s.reciter);
   const bitrate = useSettings((s) => s.audioBitrate);
   const setSettings = useSettings((s) => s.set);
-  const [reciters, setReciters] = useState<Reciter[]>([]);
   const [list, setList] = useState<SurahMeta[]>([]);
   const [done, setDone] = useState<number[]>([]);
-  const [q, setQ] = useState('');
   const [progress, setProgress] = useState<{ surah: number; pct: number } | null>(null);
 
   const refresh = () => void downloadedSurahs(reciter).then(setDone);
-  useEffect(() => {
-    void fetch(`${BASE}data/reciters.json`).then((r) => r.json()).then(setReciters);
-    void surahList().then(setList);
-  }, []);
+  useEffect(() => { void surahList().then(setList); }, []);
   useEffect(refresh, [reciter]);
-
-  const filtered = useMemo(() => {
-    const list = q ? reciters.filter((r) => r.name.includes(q)) : reciters;
-    if (q) return list;
-    const pinned = PINNED.map((id) => list.find((r) => r.id === id)).filter(Boolean) as Reciter[];
-    return [...pinned, ...list.filter((r) => !PINNED.includes(r.id))];
-  }, [q, reciters]);
 
   async function download(s: SurahMeta) {
     const full = await getSurah(s.n);
@@ -53,13 +38,10 @@ export function AudioSettings() {
 
   return (
     <div className="audio-settings stack">
-      <label className="field">
-        <span>القارئ ({arabicNum(reciters.length)} قارئ)</span>
-        <input className="search-input" placeholder="ابحث عن قارئ…" value={q} onChange={(e) => setQ(e.target.value)} />
-        <select size={6} value={reciter} onChange={(e) => setSettings({ reciter: e.target.value })} className="reciter-select">
-          {filtered.map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
-        </select>
-      </label>
+      <div className="field">
+        <span>القارئ</span>
+        <ReciterPicker value={reciter} onChange={(id) => setSettings({ reciter: id })} />
+      </div>
       <label className="field">
         <span>جودة الصوت</span>
         <div className="chips">

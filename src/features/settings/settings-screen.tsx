@@ -10,6 +10,7 @@ import { ThemeSettings } from './theme-settings';
 import { NotifySettings } from './notify-settings';
 import { DataSettings } from './data-settings';
 import { ModelSettings } from './model-settings';
+import { OfflinePack } from './offline-pack';
 
 function Section({ icon, title, hint, children }: { icon: string; title: string; hint: string; children: ReactNode }) {
   const [open, setOpen] = useState(false);
@@ -48,6 +49,7 @@ const SECTIONS = [
   { icon: 'book', title: 'المصحف', hint: 'السمة وحجم الخط', body: <ReaderSettings /> },
   { icon: 'bell', title: 'التنبيهات', hint: 'الصلاة والأذكار والحفظ', body: <NotifySettings /> },
   { icon: 'mic', title: 'محرّك التسميع', hint: 'نموذج التعرّف على الصوت وتنزيله', body: <ModelSettings /> },
+  { icon: 'download', title: 'العمل دون إنترنت', hint: 'تنزيل الأساسيات دفعة واحدة', body: <OfflinePack /> },
   { icon: 'download', title: 'البيانات والتخزين', hint: 'نسخ احتياطي وإعادة ضبط', body: <DataSettings /> },
 ];
 

@@ -4,6 +4,7 @@ import { MiniPlayer, PlayerSheet } from '../features/audio';
 import { WordSheet } from '../features/words';
 import { TafsirSheet } from '../features/tafsir';
 import { NoteSheet } from '../features/bookmarks';
+import { AyahActions } from '../features/reader';
 import { InstallPrompt, UpdateToast } from '../features/install';
 import { Onboarding } from '../features/onboarding';
 import { BottomBar } from './bottom-bar';
@@ -33,6 +34,7 @@ export function Shell() {
       <WordSheet />
       <TafsirSheet />
       <NoteSheet />
+      <AyahActions />
       <Onboarding />
     </div>
   );

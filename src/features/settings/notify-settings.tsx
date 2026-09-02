@@ -4,7 +4,7 @@ import { METHOD_NAMES } from '../prayer';
 import { requestNotifyPermission } from '../notifications';
 
 export function NotifySettings() {
-  const { notify, calcMethod, set } = useSettings();
+  const { notify, calcMethod, adhanSound, set } = useSettings();
   const patch = (k: keyof typeof notify, v: boolean) => set({ notify: { ...notify, [k]: v } });
 
   return (
@@ -13,6 +13,7 @@ export function NotifySettings() {
         السماح بالإشعارات
       </button>
       <Toggle label="تنبيه أوقات الصلاة" checked={notify.prayer} onChange={(v) => patch('prayer', v)} />
+      <Toggle label="تشغيل الأذان صوتيًا" checked={adhanSound} onChange={(v) => set({ adhanSound: v })} />
       <Toggle label="أذكار الصباح والمساء" checked={notify.adhkar} onChange={(v) => patch('adhkar', v)} />
       <Toggle label="سورة الكهف يوم الجمعة" checked={notify.kahf} onChange={(v) => patch('kahf', v)} />
       <Toggle label="تذكير الصيام (الاثنين/الخميس)" checked={notify.fasting} onChange={(v) => patch('fasting', v)} />

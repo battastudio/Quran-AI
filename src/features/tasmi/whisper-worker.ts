@@ -17,6 +17,7 @@ self.onmessage = async (e: MessageEvent) => {
       if (wasm) wasm.numThreads = 1;
       pipe = (await pipeline('automatic-speech-recognition', msg.model!, {
         device: 'wasm',
+        dtype: 'q8', // int8 — avoids 4-bit MatMulNBits which ORT-web can't run
         progress_callback: ((p: { progress?: number }) => post({ type: 'progress', progress: p.progress ?? 0 })) as never,
       })) as unknown as Pipe;
       loaded = msg.model!;

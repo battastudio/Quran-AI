@@ -90,6 +90,10 @@ async function main() {
 
   await writeFile(new URL('duas.json', OUT), JSON.stringify(DUAS));
 
+  console.log('fetching adhan mp3…');
+  const adhan = Buffer.from(await (await fetch('https://www.islamcan.com/audio/adhan/azan1.mp3')).arrayBuffer());
+  await writeFile(new URL('../adhan.mp3', OUT), adhan); // public/adhan.mp3
+
   // All Arabic reciters (audio via cdn.islamic.network/quran/audio/<bitrate>/<id>/<g>.mp3)
   console.log('fetching reciter (audio) editions…');
   const audio = await getJson(`${API}/edition?format=audio&language=ar`);

@@ -54,6 +54,12 @@ export default defineConfig({
             },
           },
           {
+            // Adhan sound: cache on first play so it works offline.
+            urlPattern: ({ url }) => url.pathname.endsWith('adhan.mp3'),
+            handler: 'CacheFirst',
+            options: { cacheName: 'adhan', cacheableResponse: { statuses: [0, 200] } },
+          },
+          {
             // Reciter + per-word audio: cache so downloaded content plays offline.
             urlPattern: ({ url }) =>
               url.href.includes('cdn.islamic.network') || url.href.includes('qurancdn.com') || url.href.includes('verses.quran.com'),

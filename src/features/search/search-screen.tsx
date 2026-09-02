@@ -40,6 +40,7 @@ export function SearchScreen() {
   return (
     <section className="screen">
       <h1 className="screen__title">البحث</h1>
+      <button className="link" onClick={() => nav('/tafsir-search')}>البحث في التفسير ←</button>
       <input
         className="search-input"
         placeholder="ابحث في القرآن…"

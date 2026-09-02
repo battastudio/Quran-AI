@@ -24,7 +24,8 @@ states (download % → preparing → listening/checking).
 ### Download reliability
 GitHub Pages doesn't set COOP/COEP → no cross-origin isolation → no `SharedArrayBuffer`,
 so onnxruntime is forced to **single-threaded WASM** (`env.backends.onnx.wasm.numThreads
-= 1`) or the model fails to init mid-download. The default model is **whisper-tiny**
+= 1`) or the model fails to init mid-download. It also forces **`dtype: 'q8'`** (int8)
+— the 4-bit default (`MatMulNBits`) can't run in ORT-web WASM. The default model is **whisper-tiny**
 (~40 MB, most reliable on phones); base/small are heavier and may fail on weak
 devices/networks. The Settings download button shows the **real error** and retries
 resume from cache. Online Tasmi' modes need no download.

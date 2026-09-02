@@ -12,6 +12,10 @@ export interface Note extends Bookmark {
   text: string;
 }
 
+export interface Highlight extends Bookmark {
+  color: string;
+}
+
 // The synced profile (superset of exportData) — progress metadata only, no audio.
 export interface Profile {
   updatedAt: number;
@@ -19,6 +23,7 @@ export interface Profile {
   lastRead?: { surah: number; ayah: number };
   bookmarks: Bookmark[];
   notes: Note[];
+  highlights: Highlight[];
   hifz: HifzCard[];
   streak: string[];
   khatmah?: KhatmahPlan | null;
@@ -43,9 +48,10 @@ export function mergeProfiles(a: Profile, b: Profile): Profile {
     settings: newer.settings,
     lastRead: newer.lastRead,
     khatmah: newer.khatmah ?? null,
-    bookmarks: unionBy(a.bookmarks, b.bookmarks, (x) => x.key, (x) => x),
-    // keep the more-recently-edited note per ayah
+    bookmarks: unionBy(a.bookmarks, b.bookmarks, (x) => x.key, (x, y) => (y.at > x.at ? y : x)),
+    // keep the more-recently-edited note/highlight per ayah
     notes: unionBy(a.notes, b.notes, (x) => x.key, (x, y) => (y.at > x.at ? y : x)),
+    highlights: unionBy(a.highlights, b.highlights, (x) => x.key, (x, y) => (y.at > x.at ? y : x)),
     // keep the more-progressed card (more reps, else later due)
     hifz: unionBy(a.hifz, b.hifz, (x) => x.key, (x, y) =>
       y.reps > x.reps || (y.reps === x.reps && y.due > x.due) ? y : x,

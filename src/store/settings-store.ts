@@ -15,6 +15,7 @@ export const DEFAULTS: Settings = {
   showWordHints: true,
   tajweed: false,
   calcMethod: 'UmmAlQura',
+  adhanSound: true,
   asrModel: 'onnx-community/whisper-tiny',
   voskModelUrl: '',
   notify: { prayer: true, adhkar: true, kahf: true, fasting: false, hifz: true },
@@ -62,6 +63,6 @@ export const useSettings = create<SettingsState>((set, get) => ({
 }));
 
 function pick(s: SettingsState): Settings {
-  const { theme, ayahFont, readerView, swipeDir, mushafPaper, reciter, audioBitrate, tafsir, fontSize, showWordHints, tajweed, calcMethod, asrModel, voskModelUrl, notify } = s;
-  return { theme, ayahFont, readerView, swipeDir, mushafPaper, reciter, audioBitrate, tafsir, fontSize, showWordHints, tajweed, calcMethod, asrModel, voskModelUrl, notify };
+  const { theme, ayahFont, readerView, swipeDir, mushafPaper, reciter, audioBitrate, tafsir, fontSize, showWordHints, tajweed, calcMethod, adhanSound, asrModel, voskModelUrl, notify } = s;
+  return { theme, ayahFont, readerView, swipeDir, mushafPaper, reciter, audioBitrate, tafsir, fontSize, showWordHints, tajweed, calcMethod, adhanSound, asrModel, voskModelUrl, notify };
 }

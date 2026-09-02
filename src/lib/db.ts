@@ -3,17 +3,18 @@ import type { HifzCard, Settings } from './types';
 
 interface Schema extends DBSchema {
   kv: { key: string; value: unknown }; // settings, progress, misc singletons
-  bookmarks: { key: string; value: { key: string; surah: number; ayah: number; at: number } };
+  bookmarks: { key: string; value: { key: string; surah: number; ayah: number; at: number; folder?: string } };
   hifz: { key: string; value: HifzCard };
   tafsir: { key: string; value: { id: string; data: Record<string, string> } };
   notes: { key: string; value: { key: string; surah: number; ayah: number; text: string; at: number } };
+  highlights: { key: string; value: { key: string; surah: number; ayah: number; color: string; at: number } };
 }
 
 let dbp: Promise<IDBPDatabase<Schema>> | null = null;
 
 function db() {
   if (!dbp)
-    dbp = openDB<Schema>('al-furqan', 2, {
+    dbp = openDB<Schema>('al-furqan', 3, {
       upgrade(d, oldVersion) {
         if (oldVersion < 1) {
           d.createObjectStore('kv');
@@ -22,9 +23,30 @@ function db() {
           d.createObjectStore('tafsir', { keyPath: 'id' });
         }
         if (oldVersion < 2) d.createObjectStore('notes', { keyPath: 'key' });
+        if (oldVersion < 3) d.createObjectStore('highlights', { keyPath: 'key' });
       },
     });
   return dbp;
+}
+
+export async function allHighlights() {
+  return (await db()).getAll('highlights');
+}
+export async function getHighlightColor(surah: number, ayah: number): Promise<string | undefined> {
+  return (await (await db()).get('highlights', `${surah}:${ayah}`))?.color;
+}
+export async function setHighlight(surah: number, ayah: number, color: string) {
+  const d = await db();
+  const key = `${surah}:${ayah}`;
+  if (color) await d.put('highlights', { key, surah, ayah, color, at: Date.now() });
+  else await d.delete('highlights', key);
+}
+export async function setBookmarkFolder(surah: number, ayah: number, folder: string) {
+  const d = await db();
+  const key = `${surah}:${ayah}`;
+  const bm = await d.get('bookmarks', key);
+  if (bm) await d.put('bookmarks', { ...bm, folder: folder || undefined });
+  else await d.put('bookmarks', { key, surah, ayah, at: Date.now(), folder: folder || undefined });
 }
 
 export async function allNotes() {
@@ -100,6 +122,7 @@ export async function exportData() {
     bookmarks: await d.getAll('bookmarks'),
     hifz: await d.getAll('hifz'),
     notes: await d.getAll('notes'),
+    highlights: await d.getAll('highlights'),
   };
 }
 
@@ -110,10 +133,11 @@ export async function importData(data: Awaited<ReturnType<typeof exportData>>) {
   for (const b of data.bookmarks ?? []) await d.put('bookmarks', b);
   for (const c of data.hifz ?? []) await d.put('hifz', c);
   for (const n of data.notes ?? []) await d.put('notes', n);
+  for (const h of data.highlights ?? []) await d.put('highlights', h);
 }
 
 export async function resetAll() {
   const d = await db();
-  for (const store of ['kv', 'bookmarks', 'hifz', 'tafsir', 'notes'] as const) await d.clear(store);
+  for (const store of ['kv', 'bookmarks', 'hifz', 'tafsir', 'notes', 'highlights'] as const) await d.clear(store);
   for (const name of await caches.keys()) await caches.delete(name);
 }

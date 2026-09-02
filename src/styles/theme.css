@@ -218,6 +218,21 @@ body {
 .reader-head__nav { display: flex; gap: 6px; }
 .ayah { padding: 10px 4px; border-bottom: 1px solid var(--border); }
 .ayah--playing { background: color-mix(in srgb, var(--accent) 12%, transparent); border-radius: 10px; }
+.ayah--hl-yellow { background: color-mix(in srgb, #e7c84a 26%, transparent); border-radius: 8px; }
+.ayah--hl-green { background: color-mix(in srgb, #4caf7d 26%, transparent); border-radius: 8px; }
+.ayah--hl-blue { background: color-mix(in srgb, #4a90d9 26%, transparent); border-radius: 8px; }
+.ayah--hl-pink { background: color-mix(in srgb, #d96aa0 26%, transparent); border-radius: 8px; }
+
+/* ayah actions sheet */
+.hl-colors { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.hl-dot { width: 30px; height: 30px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; }
+.hl-dot--on { border-color: var(--text); }
+.hl-dot--yellow { background: #e7c84a; }
+.hl-dot--green { background: #4caf7d; }
+.hl-dot--blue { background: #4a90d9; }
+.hl-dot--pink { background: #d96aa0; }
+.action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.action-grid button { display: flex; align-items: center; gap: 10px; padding: 12px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); color: var(--text); font-size: 15px; cursor: pointer; }
 .ayah__text, .bismillah, .vod__text { font-family: var(--font-quran); }
 :root[data-ayahfont='system'] .ayah__text,
 :root[data-ayahfont='system'] .vod__text { font-family: var(--font-ui); }
@@ -369,6 +384,8 @@ select, input[type='range'] { width: 100%; padding: 8px; font-size: 15px; font-f
 .player__seek { width: 100%; accent-color: var(--accent); }
 .player__time { display: flex; justify-content: space-between; color: var(--muted); font-size: 13px; }
 .player__controls { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 14px 0; }
+.ab-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ab-row input[type=number] { width: 60px; padding: 8px; }
 
 /* tasmi */
 .tasmi-modes { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
@@ -410,6 +427,13 @@ select, input[type='range'] { width: 100%; padding: 8px; font-size: 15px; font-f
 .waveform { display: block; margin: 0 auto; width: 220px; height: 54px; }
 .tasmi-summary { text-align: center; font-weight: 700; color: var(--accent); background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 10px; }
 .reciter-select { width: 100%; margin-top: 8px; }
+.reciter-picker { display: flex; flex-direction: column; gap: 8px; }
+.reciter-list { list-style: none; margin: 0; padding: 0; max-height: 260px; overflow-y: auto; border: 1px solid var(--border); border-radius: 12px; }
+.reciter-row { display: flex; align-items: center; gap: 8px; padding: 4px 6px 4px 10px; border-bottom: 1px solid var(--border); }
+.reciter-row:last-child { border-bottom: none; }
+.reciter-row--on { background: color-mix(in srgb, var(--accent) 15%, transparent); }
+.reciter-row__name { flex: 1; text-align: start; background: none; border: none; color: var(--text); font-size: 15px; padding: 8px 4px; cursor: pointer; }
+.reciter-row--on .reciter-row__name { color: var(--accent); font-weight: 700; }
 .tok--cur { color: var(--text); background: color-mix(in srgb, #e0a92a 40%, transparent); border-radius: 4px; }
 .tok--bad { color: #e05a4a; text-decoration: underline wavy; }
 
@@ -470,6 +494,14 @@ select, input[type='range'] { width: 100%; padding: 8px; font-size: 15px; font-f
 .cal-events { list-style: none; margin: 0; padding: 0; }
 .cal-event { display: flex; justify-content: space-between; padding: 12px 8px; border-bottom: 1px solid var(--border); }
 .cal-event__in { color: var(--muted); font-size: 13px; }
+
+/* word-by-word view */
+.wbw__ayah { display: flex; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.wbw__num { color: var(--accent); font-weight: 700; min-width: 26px; }
+.wbw__words { display: flex; flex-wrap: wrap; gap: 8px; flex: 1; }
+.wbw__word { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 10px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); color: var(--text); cursor: pointer; }
+.wbw__w { font-family: var(--font-quran); font-size: 20px; }
+.wbw__root { color: var(--muted); font-size: 12px; }
 
 /* search */
 .search-input { width: 100%; padding: 12px; font-size: 17px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); color: var(--text); }

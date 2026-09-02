@@ -26,6 +26,7 @@ const VIEWS: { id: ReaderView; label: string }[] = [
   { id: 'page', label: 'صفحات' },
   { id: 'focus', label: 'تركيز' },
   { id: 'cards', label: 'بطاقات' },
+  { id: 'wbw', label: 'كلمة بكلمة' },
 ];
 
 export function ThemeSettings() {

@@ -12,6 +12,7 @@ import { SurahView } from './surah-view';
 import { MushafPageView } from './mushaf-page-view';
 import { FocusView } from './focus-view';
 import { AyahCardsView } from './ayah-cards-view';
+import { WbwView } from './wbw-view';
 import { SurahPicker } from './surah-picker';
 import { SurahSwipe } from './surah-swipe';
 
@@ -20,6 +21,7 @@ const VIEWS: { id: ReaderView; icon: string }[] = [
   { id: 'page', icon: 'page' },
   { id: 'focus', icon: 'focus' },
   { id: 'cards', icon: 'grid' },
+  { id: 'wbw', icon: 'copy' },
 ];
 
 export function ReaderScreen() {
@@ -82,6 +84,7 @@ export function ReaderScreen() {
           {view === 'scroll' && <SurahView n={surah} />}
           {view === 'focus' && <FocusView n={surah} />}
           {view === 'cards' && <AyahCardsView n={surah} />}
+          {view === 'wbw' && <WbwView n={surah} />}
         </SurahSwipe>
       )}
 

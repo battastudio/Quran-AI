@@ -8,6 +8,7 @@ import { TasmiScreen } from '../features/tasmi';
 import { PrayerScreen } from '../features/prayer';
 import { HifzScreen, PracticeScreen } from '../features/hifz';
 import { SearchScreen } from '../features/search';
+import { TafsirSearch } from '../features/tafsir';
 import { KhatmahScreen } from '../features/khatmah';
 import { BookmarksScreen } from '../features/bookmarks';
 import { AdhkarScreen } from '../features/adhkar';
@@ -33,6 +34,7 @@ const router = createHashRouter([
       { path: '/hifz', element: <HifzScreen /> },
       { path: '/hifz/practice', element: <PracticeScreen /> },
       { path: '/search', element: <SearchScreen /> },
+      { path: '/tafsir-search', element: <TafsirSearch /> },
       { path: '/khatmah', element: <KhatmahScreen /> },
       { path: '/bookmarks', element: <BookmarksScreen /> },
       { path: '/adhkar', element: <AdhkarScreen /> },

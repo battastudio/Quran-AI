@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { ayahAudioUrl, syncAudioUrl } from '../lib/audio-url';
-import { segmentsFor } from '../lib/quran';
+import { getSurah, segmentsFor } from '../lib/quran';
 import { getKv, setKv } from '../lib/db';
 import { useSettings } from './settings-store';
 
@@ -31,6 +31,7 @@ interface AudioState {
   error: string | null;
   play: (queue: Track[], startIndex?: number, repeat?: number) => void;
   playSync: (queue: Track[], startIndex?: number) => void;
+  playRange: (surah: number, from: number, to: number, repeat: number) => Promise<void>;
   toggle: () => void;
   stop: () => void;
   next: () => void;
@@ -64,6 +65,15 @@ export const useAudio = create<AudioState>((set, get) => ({
   playSync: (queue, startIndex = 0) => {
     set({ queue, error: null, sync: true, currentWord: null, repeatLeft: 1 });
     playIndex(startIndex, set, get);
+  },
+  // A–B repeat: loop an ayah range N× (Infinity via loop).
+  playRange: async (surah, from, to, repeat) => {
+    const s = await getSurah(surah);
+    if (!s) return;
+    const q = s.ayahs.filter((a) => a.a >= from && a.a <= to).map((a) => ({ surah, ayah: a.a, g: a.g }));
+    if (!q.length) return;
+    set({ loop: repeat === Infinity });
+    get().play(q, 0, repeat === Infinity ? 1 : repeat);
   },
   toggle: () => {
     const a = audio();

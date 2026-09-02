@@ -29,7 +29,7 @@ export interface TafsirBook {
 }
 
 export type ThemeMode = 'auto' | 'light' | 'dark' | 'emerald' | 'royal' | 'midnight' | 'sepia' | 'night';
-export type ReaderView = 'scroll' | 'page' | 'focus' | 'cards';
+export type ReaderView = 'scroll' | 'page' | 'focus' | 'cards' | 'wbw';
 export type AyahFont = 'amiri' | 'system';
 export type SwipeDir = 'rtl' | 'ltr';
 
@@ -46,6 +46,7 @@ export interface Settings {
   showWordHints: boolean;
   tajweed: boolean; // colored tajwīd reading mode
   calcMethod: string;
+  adhanSound: boolean; // play adhan audio at prayer time (app open)
   asrModel: string; // offline Tasmi' model id (whisper-*)
   voskModelUrl: string; // optional Vosk model (.tar.gz URL); overrides whisper if set
   notify: {

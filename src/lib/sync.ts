@@ -11,6 +11,7 @@ async function localProfile(): Promise<Profile> {
     lastRead: base.lastRead as Profile['lastRead'],
     bookmarks: base.bookmarks,
     notes: base.notes,
+    highlights: base.highlights,
     hifz: base.hifz,
     streak: (await getKv<string[]>('streakDays')) ?? [],
     khatmah: (await getKv<KhatmahPlan>('khatmah')) ?? null,
@@ -18,7 +19,7 @@ async function localProfile(): Promise<Profile> {
 }
 
 async function applyProfile(p: Profile): Promise<void> {
-  await importData({ settings: p.settings, lastRead: p.lastRead, bookmarks: p.bookmarks, hifz: p.hifz, notes: p.notes });
+  await importData({ settings: p.settings, lastRead: p.lastRead, bookmarks: p.bookmarks, hifz: p.hifz, notes: p.notes, highlights: p.highlights });
   await setKv('streakDays', p.streak);
   await setKv('khatmah', p.khatmah ?? null);
   await setKv('profileUpdatedAt', p.updatedAt);

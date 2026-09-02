@@ -81,5 +81,9 @@ async function scheduleNextPrayer(): Promise<void> {
   const next = rows.find((r) => r.key !== 'sunrise' && r.time.getTime() > now);
   if (!next) return;
   const ms = next.time.getTime() - now;
-  if (ms < 3_600_000) setTimeout(() => notify('حان وقت الصلاة', `حان الآن وقت ${next.name}`), ms);
+  if (ms < 3_600_000)
+    setTimeout(() => {
+      notify('حان وقت الصلاة', `حان الآن وقت ${next.name}`);
+      if (useSettings.getState().adhanSound) new Audio(`${import.meta.env.BASE_URL}adhan.mp3`).play().catch(() => {});
+    }, ms);
 }
