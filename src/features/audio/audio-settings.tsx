@@ -4,6 +4,10 @@ import { arabicNum } from '../../lib/format';
 import { deleteSurah, downloadSurah, downloadedSurahs } from '../../lib/audio-cache';
 import type { Reciter, SurahMeta } from '../../lib/types';
 import { useSettings } from '../../store/settings-store';
+import { reciterBitrate } from '../../store/audio-store';
+
+// Popular reciters pinned to the top of the searchable list.
+const PINNED = ['ar.alafasy', 'ar.abdurrahmaansudais', 'ar.abdulbasitmurattal', 'ar.minshawi', 'ar.husary'];
 
 const BASE = import.meta.env.BASE_URL;
 const BITRATES = [64, 128, 192];
@@ -26,22 +30,24 @@ export function AudioSettings() {
   }, []);
   useEffect(refresh, [reciter]);
 
-  const filtered = useMemo(
-    () => (q ? reciters.filter((r) => r.name.includes(q)) : reciters),
-    [q, reciters],
-  );
+  const filtered = useMemo(() => {
+    const list = q ? reciters.filter((r) => r.name.includes(q)) : reciters;
+    if (q) return list;
+    const pinned = PINNED.map((id) => list.find((r) => r.id === id)).filter(Boolean) as Reciter[];
+    return [...pinned, ...list.filter((r) => !PINNED.includes(r.id))];
+  }, [q, reciters]);
 
   async function download(s: SurahMeta) {
     const full = await getSurah(s.n);
     if (!full) return;
     const gs = full.ayahs.map((a) => a.g);
-    await downloadSurah(reciter, s.n, gs, bitrate, (d, t) => setProgress({ surah: s.n, pct: Math.round((d / t) * 100) }));
+    await downloadSurah(reciter, s.n, gs, reciterBitrate(reciter), (d, t) => setProgress({ surah: s.n, pct: Math.round((d / t) * 100) }));
     setProgress(null);
     refresh();
   }
   async function remove(s: SurahMeta) {
     const full = await getSurah(s.n);
-    if (full) await deleteSurah(reciter, s.n, full.ayahs.map((a) => a.g), bitrate);
+    if (full) await deleteSurah(reciter, s.n, full.ayahs.map((a) => a.g), reciterBitrate(reciter));
     refresh();
   }
 

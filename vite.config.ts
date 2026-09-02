@@ -5,6 +5,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 // base must match the GitHub Pages repo sub-path (https://<user>.github.io/quran_ai/).
 export default defineConfig({
   base: '/Quran-AI/',
+  worker: { format: 'es' }, // whisper worker dynamic-imports transformers (code-split)
   plugins: [
     react(),
     VitePWA({
@@ -29,6 +30,8 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,woff2}'],
+        // custom SW code: periodic-sync reminder + notification click handlers
+        importScripts: ['sw-reminders.js'],
         // Offline-ASR chunks (Vosk / transformers.js Whisper) are large and loaded
         // only on demand — keep them out of precache (fetched when the user opts in).
         globIgnores: ['**/vosk-*.js', '**/transformers*.js', '**/ort-*.js', '**/*.wasm'],

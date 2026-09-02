@@ -41,6 +41,36 @@ export async function runReminders(): Promise<void> {
     notify('صيام السنة', day === 1 ? 'اليوم الاثنين — صيام مستحب.' : 'اليوم الخميس — صيام مستحب.');
 
   if (on.prayer) await scheduleNextPrayer();
+
+  await updateNudge(on);
+  void registerPeriodicSync();
+}
+
+// A single "nudge" the service worker can show on periodic background sync
+// (best-effort; installed Android/Chrome only — iOS is foreground-only).
+async function updateNudge(on: ReturnType<typeof useSettings.getState>['notify']): Promise<void> {
+  let title = '', body = '';
+  const coords = await savedCoords();
+  if (on.prayer && coords) {
+    const { rows } = computeTimes(coords, useSettings.getState().calcMethod);
+    const next = rows.find((r) => r.key !== 'sunrise' && r.time.getTime() > Date.now());
+    if (next) { title = 'نور القرآن'; body = `الصلاة القادمة: ${next.name}`; }
+  }
+  if (!title && on.adhkar) { title = 'نور القرآن'; body = 'لا تنسَ أذكارك اليوم 🌿'; }
+  if (title) await setKv('reminderNudge', { title, body });
+}
+
+async function registerPeriodicSync(): Promise<void> {
+  try {
+    const reg = await navigator.serviceWorker?.ready;
+    const ps = (reg as unknown as { periodicSync?: { register: (t: string, o: object) => Promise<void> } })?.periodicSync;
+    if (!ps) return;
+    const status = await navigator.permissions.query({ name: 'periodic-background-sync' as PermissionName }).catch(() => null);
+    if (status && status.state !== 'granted') return;
+    await ps.register('reminders', { minInterval: 12 * 60 * 60 * 1000 });
+  } catch {
+    /* unsupported (iOS/Safari/Firefox) — foreground reminders still work */
+  }
 }
 
 async function scheduleNextPrayer(): Promise<void> {

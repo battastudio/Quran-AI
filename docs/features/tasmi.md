@@ -11,8 +11,15 @@ follow the text rather than open-transcribe. Word-accuracy only — **no tajwīd
 - **offline** (`offline-tasmi.tsx` + `whisper.ts`) — record an ayah, on-device
   **Whisper** checks it. Fully offline after first model load.
 
-Enhancements: real mic **waveform** (`waveform.tsx`, Web Audio AnalyserNode),
-**session summary** (accuracy + mistakes) after a live run, continuous auto-scroll.
+Enhancements: recitation renders on an **authentic Mushaf parchment page**
+(`.mushaf__page--paper`) with **word-level highlight backgrounds** — green=correct,
+red=wrong/skipped (yellow reserved, see below); tap a word → `WordSheet`. A floating
+**live bar** (`tasmi-live-bar.tsx`) shows the mic + **waveform** + **accuracy ring**.
+Session summary (accuracy + mistakes) after a live run.
+
+The offline Whisper model runs in a **Web Worker** (`whisper-worker.ts`) so the UI
+never freezes during download/inference; the client (`whisper.ts`) shows clear
+states (download % → preparing → listening/checking).
 
 ## Offline model (chooseable + downloadable)
 Settings → محرّك التسميع picks a **Whisper** model and downloads it:

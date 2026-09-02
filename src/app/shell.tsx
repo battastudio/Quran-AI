@@ -1,6 +1,6 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { MiniPlayer } from '../features/audio';
+import { MiniPlayer, PlayerSheet } from '../features/audio';
 import { WordSheet } from '../features/words';
 import { TafsirSheet } from '../features/tafsir';
 import { NoteSheet } from '../features/bookmarks';
@@ -29,6 +29,7 @@ export function Shell() {
       <UpdateToast />
       <MiniPlayer />
       <BottomBar />
+      <PlayerSheet />
       <WordSheet />
       <TafsirSheet />
       <NoteSheet />

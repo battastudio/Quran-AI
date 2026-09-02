@@ -1,6 +1,15 @@
 import { create } from 'zustand';
 import { ayahAudioUrl } from '../lib/audio-url';
+import { getKv, setKv } from '../lib/db';
 import { useSettings } from './settings-store';
+
+// islamic.network hosts different bitrates per reciter — resolve one that works.
+const BITRATES = [128, 64, 192];
+const resolved: Record<string, number> = {};
+export function reciterBitrate(reciter: string): number {
+  return resolved[reciter] ?? useSettings.getState().audioBitrate;
+}
+void getKv<Record<string, number>>('bitrateCache').then((c) => Object.assign(resolved, c ?? {}));
 
 interface Track {
   surah: number;
@@ -12,11 +21,15 @@ interface AudioState {
   playing: Track | null;
   isPlaying: boolean;
   queue: Track[];
+  index: number;
   speed: number;
   loop: boolean; // A–B loop the current queue
+  error: string | null;
   play: (queue: Track[], startIndex?: number) => void;
   toggle: () => void;
   stop: () => void;
+  next: () => void;
+  prev: () => void;
   setSpeed: (s: number) => void;
   setLoop: (v: boolean) => void;
 }
@@ -26,15 +39,18 @@ function audio(): HTMLAudioElement {
   if (!el) el = new Audio();
   return el;
 }
+export const audioEl = audio;
 
 export const useAudio = create<AudioState>((set, get) => ({
   playing: null,
   isPlaying: false,
   queue: [],
+  index: 0,
   speed: 1,
   loop: false,
+  error: null,
   play: (queue, startIndex = 0) => {
-    set({ queue });
+    set({ queue, error: null });
     playIndex(startIndex, set, get);
   },
   toggle: () => {
@@ -51,6 +67,8 @@ export const useAudio = create<AudioState>((set, get) => ({
     audio().pause();
     set({ playing: null, isPlaying: false, queue: [] });
   },
+  next: () => playIndex(get().index + 1, set, get),
+  prev: () => playIndex(get().index - 1, set, get),
   setSpeed: (s) => {
     audio().playbackRate = s;
     set({ speed: s });
@@ -65,14 +83,35 @@ function playIndex(i: number, set: SetFn, get: GetFn) {
     return set({ playing: null, isPlaying: false });
   }
   const track = queue[i];
-  const a = audio();
-  const st = useSettings.getState();
-  a.src = ayahAudioUrl(st.reciter, track.g, st.audioBitrate);
-  a.playbackRate = speed;
-  a.onended = () => playIndex(i + 1, set, get);
-  void a.play();
-  set({ playing: track, isPlaying: true });
+  const reciter = useSettings.getState().reciter;
+  set({ playing: track, isPlaying: true, index: i, error: null });
+  startWithFallback(reciter, track, speed, () => playIndex(i + 1, set, get), set);
   mediaSession(i, track, set, get);
+}
+
+// Try bitrates until one loads; remember the winner per reciter.
+function startWithFallback(reciter: string, track: Track, speed: number, onEnd: () => void, set: SetFn) {
+  const order = [reciterBitrate(reciter), ...BITRATES].filter((b, i, a) => a.indexOf(b) === i);
+  let attempt = 0;
+  const a = audio();
+  a.playbackRate = speed;
+  a.onended = onEnd;
+  const tryNext = () => {
+    if (attempt >= order.length) {
+      set({ isPlaying: false, error: 'تعذّر تشغيل هذا القارئ. جرّب قارئًا آخر.' });
+      return;
+    }
+    const bitrate = order[attempt++];
+    a.onerror = tryNext;
+    a.oncanplay = () => {
+      resolved[reciter] = bitrate;
+      void setKv('bitrateCache', resolved);
+      a.oncanplay = null;
+    };
+    a.src = ayahAudioUrl(reciter, track.g, bitrate);
+    void a.play().catch(() => {});
+  };
+  tryNext();
 }
 
 // Lock-screen / hardware media controls.

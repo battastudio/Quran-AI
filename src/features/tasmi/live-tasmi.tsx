@@ -2,20 +2,22 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { words } from '../../lib/quran';
 import { tokens } from '../../lib/normalize';
 import { arabicNum } from '../../lib/format';
+import { ayahMark } from '../../lib/format';
 import type { Ayah } from '../../lib/types';
+import { useWordSheet } from '../words';
 import { listen, speechSupported } from './speech';
 import { accuracy, align, type TokenStatus } from './align';
-import { MicButton } from './mic-button';
-import { AccuracyRing } from './accuracy-ring';
-import { Waveform } from './waveform';
+import { TasmiLiveBar } from './tasmi-live-bar';
 
-const CLS: Record<TokenStatus, string> = { done: 'tok--ok', current: 'tok--cur', wrong: 'tok--bad', pending: '' };
+const CLS: Record<TokenStatus, string> = { done: 'wtok--ok', current: 'wtok--cur', wrong: 'wtok--bad', pending: '' };
 
-// Live follow-along (Web Speech). memorize=true hides the text while reciting.
-export function LiveTasmi({ ayahs, memorize }: { surah: number; ayahs: Ayah[]; memorize: boolean }) {
+// Live follow-along on an authentic Mushaf page; words highlight green/red in order.
+// memorize=true blurs the text while reciting, then reveals with the result.
+export function LiveTasmi({ surah, ayahs, memorize }: { surah: number; ayahs: Ayah[]; memorize: boolean }) {
   const [heard, setHeard] = useState('');
   const [live, setLive] = useState(false);
   const rec = useRef<{ stop: () => void } | null>(null);
+  const showWord = useWordSheet((s) => s.show);
 
   useEffect(() => () => rec.current?.stop(), []);
 
@@ -37,31 +39,30 @@ export function LiveTasmi({ ayahs, memorize }: { surah: number; ayahs: Ayah[]; m
     if (rec.current) setLive(true);
   }
 
-  const hide = memorize && live; // conceal text during memorization test
+  const hide = memorize && live;
   return (
     <div className="tasmi">
-      <div className="tasmi__head">
-        <AccuracyRing value={accuracy(status)} />
-        <MicButton active={live} onClick={toggle} disabled={!speechSupported()} />
-      </div>
-      <Waveform active={live} />
       {!speechSupported() && <p className="error">هذا المحرّك يتطلّب Chrome. جرّب وضع «دون إنترنت».</p>}
-      {!live && heard && (
-        <p className="tasmi-summary">
-          النتيجة: دقّة {arabicNum(accuracy(status))}٪ · أخطاء {arabicNum(status.filter((s) => s === 'wrong').length)}
+      <div className={hide ? 'mushaf__page mushaf__page--paper tasmi-text--hidden' : 'mushaf__page mushaf__page--paper'}>
+        <p className="ayah__text mushaf__text">
+          {ayahs.map((a, ai) => (
+            <span key={a.a}>
+              {words(a.t).map((w, wi) => {
+                const gi = offsets[ai] + wi;
+                return (
+                  <span key={wi} id={`tw-${gi}`} className={`wtok ${CLS[status[gi] ?? 'pending']}`}
+                    onClick={() => showWord(w, surah, a.a, wi + 1)}>{w}{' '}</span>
+                );
+              })}
+              <span className="ayah__mark">{ayahMark(a.a)}</span>{' '}
+            </span>
+          ))}
         </p>
-      )}
-      <div className={hide ? 'tasmi-text tasmi-text--hidden' : 'tasmi-text'}>
-        {ayahs.map((a, ai) => (
-          <p key={a.a} className="ayah__text">
-            {words(a.t).map((w, wi) => {
-              const gi = offsets[ai] + wi;
-              return <span key={wi} id={`tw-${gi}`} className={`tok ${CLS[status[gi] ?? 'pending']}`}>{w}{' '}</span>;
-            })}
-            <span className="ayah__mark">{arabicNum(a.a)}</span>
-          </p>
-        ))}
       </div>
+      {!live && heard && (
+        <p className="tasmi-summary">النتيجة: دقّة {arabicNum(accuracy(status))}٪ · أخطاء {arabicNum(status.filter((s) => s === 'wrong').length)}</p>
+      )}
+      <TasmiLiveBar active={live} accuracy={accuracy(status)} onToggle={toggle} disabled={!speechSupported()} />
     </div>
   );
 }

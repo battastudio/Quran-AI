@@ -1,8 +1,12 @@
 # Extras (adhkar · share · media session · install · onboarding)
 
 **Adhkar** — `src/features/adhkar/` (`/adhkar`, Home card). 132 categories from
-Hisn al-Muslim (`public/data/adhkar.json`, attributed; not Quran text). Tap a
-dhikr card to count repetitions. Offline (bundled).
+Hisn al-Muslim (`public/data/adhkar.json`, attributed; not Quran text) + quick
+tabs (الصباح والمساء · بعد الصلاة · النوم · الاستيقاظ). `dhikr-counter.tsx`:
+tap-anywhere counter with a **progress ring**, **haptic** + tap **sound**
+(`src/lib/haptics.ts`), and **auto-advance** to the next dhikr on reaching the
+target. Targets are inferred from the text (`src/lib/adhkar.ts` `targetCount`,
+tested) and adjustable. Offline (bundled).
 
 **Share ayah as image** — `src/lib/share-image.ts`. Canvas-renders the ayah +
 reference + «نور القرآن» → PNG; uses `navigator.share({ files })` when available,

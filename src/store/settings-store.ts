@@ -46,6 +46,8 @@ export const useSettings = create<SettingsState>((set, get) => ({
   hydrate: async () => {
     const saved = await loadSettings();
     const merged = { ...DEFAULTS, ...saved, notify: { ...DEFAULTS.notify, ...saved?.notify } };
+    // migrate stale reciter ids (pre-CDN builds saved everyayah folder names)
+    if (!merged.reciter.startsWith('ar.')) merged.reciter = DEFAULTS.reciter;
     applyTheme(merged.theme);
     applyAyahFont(merged.ayahFont);
     set({ ...merged, hydrated: true });

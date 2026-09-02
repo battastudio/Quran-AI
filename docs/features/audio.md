@@ -19,3 +19,12 @@
 
 Not bundled (GitHub Pages size) — audio streams on first play, plays offline
 only after a surah is downloaded.
+
+## Playback reliability
+islamic.network hosts **different bitrates per reciter** (e.g. Sudais 64 not 128).
+`audio-store.ts` tries `[128, 64, 192]` on `<audio>` error and caches the working
+one per reciter (`bitrateCache` in IndexedDB); a friendly message shows if all
+fail. `settings-store` **migrates** stale pre-CDN reciter ids (`Alafasy_128kbps` →
+`ar.alafasy`). Popular reciters (Afasy, Sudais, Abdul Basit, Minshawi, Husary) are
+pinned atop the searchable picker. Tap the mini-player → **floating full player**
+(`player-sheet.tsx`): seek, reciter switcher, speed, A–B loop, next/prev.
