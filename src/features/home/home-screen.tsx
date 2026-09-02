@@ -101,6 +101,7 @@ export function HomeScreen() {
         <button onClick={() => nav('/asma')}><span>﷽</span>الأسماء الحسنى</button>
         <button onClick={() => nav('/duas')}><span>🤲</span>أدعية</button>
         <button onClick={() => nav('/calendar')}><span>🗓️</span>التقويم</button>
+        <button onClick={() => nav('/recite-lab')}><span>🎙️</span>معمل التلاوة</button>
       </div>
       <VerseOfDay
         onOpen={(s, a) => { goTo(s, a); nav('/mushaf'); }}

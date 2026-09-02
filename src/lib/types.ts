@@ -28,7 +28,7 @@ export interface TafsirBook {
   name: string;
 }
 
-export type ThemeMode = 'auto' | 'light' | 'dark' | 'emerald' | 'royal' | 'midnight' | 'sepia' | 'night';
+export type ThemeMode = 'auto' | 'light' | 'dark' | 'emerald' | 'royal' | 'midnight' | 'sepia' | 'night' | 'contrast';
 export type ReaderView = 'scroll' | 'page' | 'focus' | 'cards' | 'wbw';
 export type AyahFont = 'amiri' | 'system';
 export type SwipeDir = 'rtl' | 'ltr';
@@ -42,6 +42,8 @@ export interface Settings {
   reciter: string; // ar.* audio edition id
   audioBitrate: number; // 128 | 64 | 192
   tafsir: string; // active tafsir id ('muyassar' = bundled)
+  translation: string; // active translation edition id ('none' = off)
+  comfort: boolean; // reading-comfort spacing (accessibility)
   fontSize: number; // ayah font px
   showWordHints: boolean;
   tajweed: boolean; // colored tajwīd reading mode

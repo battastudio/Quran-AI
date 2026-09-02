@@ -1,5 +1,6 @@
 import type { Surah, SurahMeta } from './types';
-import { getTafsirDownload, putTafsirDownload } from './db';
+import { getTafsirDownload, putTafsirDownload, getTranslationDownload, putTranslationDownload } from './db';
+import { isSpaSlug, scholarText } from './scholar';
 
 const BASE = import.meta.env.BASE_URL;
 
@@ -31,12 +32,13 @@ export interface FlatAyah {
   s: number;
   a: number;
   t: string;
+  j: number; // juz
 }
 
 let flatCache: FlatAyah[] | null = null;
 export async function allAyahsFlat(): Promise<FlatAyah[]> {
   if (!flatCache)
-    flatCache = (await allSurahs()).flatMap((s) => s.ayahs.map((y) => ({ s: s.n, a: y.a, t: y.t })));
+    flatCache = (await allSurahs()).flatMap((s) => s.ayahs.map((y) => ({ s: s.n, a: y.a, t: y.t, j: y.j })));
   return flatCache;
 }
 
@@ -65,9 +67,12 @@ export interface Morphology {
   p: string; // POS code
 }
 let morphCache: Record<string, Morphology> | null = null;
-export async function morphologyFor(surah: number, ayah: number, word: number): Promise<Morphology | null> {
+export async function morphologyMap(): Promise<Record<string, Morphology>> {
   if (!morphCache) morphCache = await fetchJson<Record<string, Morphology>>('word-morphology.json');
-  return morphCache[`${surah}:${ayah}:${word}`] ?? null;
+  return morphCache;
+}
+export async function morphologyFor(surah: number, ayah: number, word: number): Promise<Morphology | null> {
+  return (await morphologyMap())[`${surah}:${ayah}:${word}`] ?? null;
 }
 
 let segCache: Record<string, [number, number, number][]> | null = null;
@@ -89,8 +94,23 @@ export async function tajweedFor(surah: number, ayah: number): Promise<string | 
 export async function tafsirFor(bookId: string, surah: number, ayah: number): Promise<string | null> {
   const key = `${surah}:${ayah}`;
   if (bookId === 'muyassar') return (await muyassar())[key] ?? null;
+  if (isSpaSlug(bookId)) return scholarText(bookId, surah, ayah); // Ibn Kathīr/Ṭabarī/… on demand
   const dl = await getTafsirDownload(bookId);
   return dl?.data[key] ?? null;
+}
+
+// Translations: whole-edition download from AlQuran Cloud → IndexedDB.
+export async function downloadTranslation(id: string): Promise<void> {
+  const res = await fetch(`https://api.alquran.cloud/v1/quran/${id}`);
+  if (!res.ok) throw new Error(`download ${id}: ${res.status}`);
+  const body = await res.json();
+  if (body.code !== 200) throw new Error(`download ${id}: bad payload`);
+  const map: Record<string, string> = {};
+  for (const s of body.data.surahs) for (const a of s.ayahs) map[`${s.number}:${a.numberInSurah}`] = a.text;
+  await putTranslationDownload(id, map);
+}
+export async function translationMap(id: string): Promise<Record<string, string> | null> {
+  return (await getTranslationDownload(id))?.data ?? null;
 }
 
 // Download a full tafsir edition from AlQuran Cloud → IndexedDB (offline after).

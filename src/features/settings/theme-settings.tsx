@@ -16,6 +16,7 @@ const THEMES: { id: ThemeMode; label: string; swatch: string }[] = [
   { id: 'midnight', label: 'أخضر داكن', swatch: '#071310' },
   { id: 'sepia', label: 'ورقي', swatch: '#f3ead6' },
   { id: 'night', label: 'ليلي', swatch: '#14110c' },
+  { id: 'contrast', label: 'تباين عالٍ', swatch: 'linear-gradient(135deg,#000 50%,#fff 50%)' },
 ];
 const FONTS: { id: AyahFont; label: string }[] = [
   { id: 'amiri', label: 'أميري (مصحفي)' },
@@ -30,7 +31,7 @@ const VIEWS: { id: ReaderView; label: string }[] = [
 ];
 
 export function ThemeSettings() {
-  const { theme, ayahFont, readerView, swipeDir, mushafPaper, set } = useSettings();
+  const { theme, ayahFont, readerView, swipeDir, mushafPaper, comfort, set } = useSettings();
   return (
     <div className="stack">
       <div className="field">
@@ -73,6 +74,7 @@ export function ThemeSettings() {
         </div>
       </div>
       <Toggle label="صفحة المصحف بخلفية ورقية مزخرفة" checked={mushafPaper} onChange={(v) => set({ mushafPaper: v })} />
+      <Toggle label="راحة القراءة (تباعد أوسع)" checked={comfort} onChange={(v) => set({ comfort: v })} />
     </div>
   );
 }

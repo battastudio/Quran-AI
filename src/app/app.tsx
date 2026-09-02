@@ -13,10 +13,12 @@ import { KhatmahScreen } from '../features/khatmah';
 import { BookmarksScreen } from '../features/bookmarks';
 import { AdhkarScreen } from '../features/adhkar';
 import { StatsScreen } from '../features/stats';
+import { OccurrencesScreen } from '../features/reader';
 import { TasbihScreen } from '../features/tasbih';
 import { AsmaScreen } from '../features/asma';
 import { DuasScreen } from '../features/duas';
 import { CalendarScreen } from '../features/calendar';
+import { ReciteScreen } from '../features/recite';
 import { useSettings } from '../store/settings-store';
 import { useReader } from '../store/reader-store';
 import { runReminders } from '../features/notifications';
@@ -35,6 +37,8 @@ const router = createHashRouter([
       { path: '/hifz/practice', element: <PracticeScreen /> },
       { path: '/search', element: <SearchScreen /> },
       { path: '/tafsir-search', element: <TafsirSearch /> },
+      { path: '/root/:root', element: <OccurrencesScreen /> },
+      { path: '/similar/:s/:a', element: <OccurrencesScreen /> },
       { path: '/khatmah', element: <KhatmahScreen /> },
       { path: '/bookmarks', element: <BookmarksScreen /> },
       { path: '/adhkar', element: <AdhkarScreen /> },
@@ -43,6 +47,7 @@ const router = createHashRouter([
       { path: '/asma', element: <AsmaScreen /> },
       { path: '/duas', element: <DuasScreen /> },
       { path: '/calendar', element: <CalendarScreen /> },
+      { path: '/recite-lab', element: <ReciteScreen /> },
       { path: '/settings', element: <SettingsScreen /> },
     ],
   },

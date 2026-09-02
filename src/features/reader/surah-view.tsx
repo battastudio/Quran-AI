@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Spinner } from '../../components';
-import { getSurah } from '../../lib/quran';
+import { getSurah, translationMap } from '../../lib/quran';
 import { markPageRead } from '../../lib/stats';
 import { allBookmarks, allHighlights } from '../../lib/db';
+import { useSettings } from '../../store/settings-store';
 import type { Surah } from '../../lib/types';
 import { useAudio } from '../../store/audio-store';
 import { useReader } from '../../store/reader-store';
@@ -12,6 +13,8 @@ export function SurahView({ n }: { n: number }) {
   const [surah, setSurah] = useState<Surah | null>(null);
   const [marks, setMarks] = useState<Set<string>>(new Set());
   const [hl, setHl] = useState<Record<string, string>>({});
+  const [tr, setTr] = useState<Record<string, string> | null>(null);
+  const translation = useSettings((s) => s.translation);
   const [failed, setFailed] = useState(false);
   const playing = useAudio((s) => s.playing);
   const markRead = useReader((s) => s.markRead);
@@ -25,6 +28,11 @@ export function SurahView({ n }: { n: number }) {
     void allBookmarks().then((b) => setMarks(new Set(b.map((x) => x.key))));
     void allHighlights().then((h) => setHl(Object.fromEntries(h.map((x) => [x.key, x.color]))));
   }, [n]);
+
+  useEffect(() => {
+    if (translation === 'none') { setTr(null); return; }
+    void translationMap(translation).then(setTr);
+  }, [translation, n]);
 
   // Track the ayah nearest the viewport centre so "continue reading" is accurate.
   useEffect(() => {
@@ -74,6 +82,7 @@ export function SurahView({ n }: { n: number }) {
           playing={playing?.surah === surah.n && playing.ayah === a.a}
           bookmarked={marks.has(`${surah.n}:${a.a}`)}
           highlight={hl[`${surah.n}:${a.a}`]}
+          translation={tr?.[`${surah.n}:${a.a}`]}
         />
       ))}
     </div>

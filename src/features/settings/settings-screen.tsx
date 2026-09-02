@@ -11,6 +11,7 @@ import { NotifySettings } from './notify-settings';
 import { DataSettings } from './data-settings';
 import { ModelSettings } from './model-settings';
 import { OfflinePack } from './offline-pack';
+import { TranslationManager } from './translation-manager';
 
 function Section({ icon, title, hint, children }: { icon: string; title: string; hint: string; children: ReactNode }) {
   const [open, setOpen] = useState(false);
@@ -46,6 +47,7 @@ const SECTIONS = [
   { icon: 'user', title: 'الحساب والمزامنة', hint: 'حفظ تقدّمك عبر الأجهزة', body: <AccountPanel /> },
   { icon: 'play', title: 'التلاوة والصوت', hint: 'القارئ وتنزيل السور', body: <AudioSettings /> },
   { icon: 'book', title: 'التفسير', hint: 'تنزيل الكتب واختيار المعتمد', body: <TafsirManager /> },
+  { icon: 'book', title: 'الترجمة', hint: 'ترجمات بعدّة لغات', body: <TranslationManager /> },
   { icon: 'book', title: 'المصحف', hint: 'السمة وحجم الخط', body: <ReaderSettings /> },
   { icon: 'bell', title: 'التنبيهات', hint: 'الصلاة والأذكار والحفظ', body: <NotifySettings /> },
   { icon: 'mic', title: 'محرّك التسميع', hint: 'نموذج التعرّف على الصوت وتنزيله', body: <ModelSettings /> },

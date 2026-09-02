@@ -14,9 +14,10 @@ interface Props {
   playing: boolean;
   bookmarked: boolean;
   highlight?: string; // color key
+  translation?: string;
 }
 
-export function AyahBlock({ surah, ayah, playing, highlight }: Props) {
+export function AyahBlock({ surah, ayah, playing, highlight, translation }: Props) {
   const fontSize = useSettings((s) => s.fontSize);
   const tajweed = useSettings((s) => s.tajweed);
   const showWord = useWordSheet((s) => s.show);
@@ -42,6 +43,7 @@ export function AyahBlock({ surah, ayah, playing, highlight }: Props) {
         )}
         <span className="ayah__mark">{ayahMark(ayah.a)}</span>
       </p>
+      {translation && <p className="ayah__tr" dir="auto">{translation}</p>}
       <div className="ayah__actions">
         <button className="icon-btn" aria-label="استماع" onClick={() => playFrom([{ surah, ayah: ayah.a, g: ayah.g }])}><Icon name="play" /></button>
         <button className="icon-btn" aria-label="إجراءات" onClick={() => showActions({ surah, ayah: ayah.a, g: ayah.g, text: ayah.t })}><Icon name="list" /></button>

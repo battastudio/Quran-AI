@@ -8,13 +8,16 @@ interface Schema extends DBSchema {
   tafsir: { key: string; value: { id: string; data: Record<string, string> } };
   notes: { key: string; value: { key: string; surah: number; ayah: number; text: string; at: number } };
   highlights: { key: string; value: { key: string; surah: number; ayah: number; color: string; at: number } };
+  scholar: { key: string; value: { key: string; text: string } }; // spa5k i'rab/gharib/tafsir per-ayah
+  translations: { key: string; value: { id: string; data: Record<string, string> } };
+  recordings: { key: string; value: { id: string; surah: number; ayah: number; blob: Blob; at: number } };
 }
 
 let dbp: Promise<IDBPDatabase<Schema>> | null = null;
 
 function db() {
   if (!dbp)
-    dbp = openDB<Schema>('al-furqan', 3, {
+    dbp = openDB<Schema>('al-furqan', 4, {
       upgrade(d, oldVersion) {
         if (oldVersion < 1) {
           d.createObjectStore('kv');
@@ -24,9 +27,42 @@ function db() {
         }
         if (oldVersion < 2) d.createObjectStore('notes', { keyPath: 'key' });
         if (oldVersion < 3) d.createObjectStore('highlights', { keyPath: 'key' });
+        if (oldVersion < 4) {
+          d.createObjectStore('scholar', { keyPath: 'key' });
+          d.createObjectStore('translations', { keyPath: 'id' });
+          d.createObjectStore('recordings', { keyPath: 'id' });
+        }
       },
     });
   return dbp;
+}
+
+export async function getScholarCache(key: string) {
+  return (await (await db()).get('scholar', key))?.text;
+}
+export async function putScholarCache(key: string, text: string) {
+  await (await db()).put('scholar', { key, text });
+}
+export async function getTranslationDownload(id: string) {
+  return (await db()).get('translations', id);
+}
+export async function putTranslationDownload(id: string, data: Record<string, string>) {
+  await (await db()).put('translations', { id, data });
+}
+export async function deleteTranslationDownload(id: string) {
+  await (await db()).delete('translations', id);
+}
+export async function downloadedTranslationIds() {
+  return (await db()).getAllKeys('translations') as Promise<string[]>;
+}
+export async function allRecordings() {
+  return (await db()).getAll('recordings');
+}
+export async function putRecording(r: { id: string; surah: number; ayah: number; blob: Blob; at: number }) {
+  await (await db()).put('recordings', r);
+}
+export async function deleteRecording(id: string) {
+  await (await db()).delete('recordings', id);
 }
 
 export async function allHighlights() {
@@ -138,6 +174,6 @@ export async function importData(data: Awaited<ReturnType<typeof exportData>>) {
 
 export async function resetAll() {
   const d = await db();
-  for (const store of ['kv', 'bookmarks', 'hifz', 'tafsir', 'notes', 'highlights'] as const) await d.clear(store);
+  for (const store of ['kv', 'bookmarks', 'hifz', 'tafsir', 'notes', 'highlights', 'scholar', 'translations', 'recordings'] as const) await d.clear(store);
   for (const name of await caches.keys()) await caches.delete(name);
 }

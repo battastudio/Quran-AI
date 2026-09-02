@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { create } from 'zustand';
 import { BottomSheet, Icon } from '../../components';
 import { arabicNum } from '../../lib/format';
@@ -28,6 +29,7 @@ export function AyahActions() {
   const play = useAudio((s) => s.play);
   const showTafsir = useTafsirSheet((s) => s.show);
   const showNote = useNoteSheet((s) => s.show);
+  const nav = useNavigate();
   const [hl, setHl] = useState('');
   const ref = `سورة ${arabicNum(surah)} — الآية ${arabicNum(ayah)}`;
 
@@ -58,6 +60,7 @@ export function AyahActions() {
         <button onClick={shareText}><Icon name="share" /> مشاركة نص</button>
         <button onClick={() => void shareAyahImage(text, ref)}><Icon name="download" /> صورة</button>
         <button onClick={async () => { await memorizeAyah(surah, ayah); close(); }}><Icon name="plus" /> حفظ</button>
+        <button onClick={() => { close(); nav(`/similar/${surah}/${ayah}`); }}><Icon name="copy" /> آيات متشابهة</button>
       </div>
     </BottomSheet>
   );

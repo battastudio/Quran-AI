@@ -23,6 +23,7 @@ on-device; sacred text is bundled and never model-generated (see `../../CLAUDE.m
 | Tasmi' follow-along | [tasmi.md](tasmi.md) | ⚠️ online, or offline w/ Vosk model |
 | Word depth (root/grammar + sync) | [word-depth.md](word-depth.md) | ✅ (Alafasy sync bundled) |
 | Stats · badges · toolkit · hifz tools | [more.md](more.md) | ✅ |
+| Expert: i'rab/gharib · study · recite · translations | [expert.md](expert.md) | ✅ (after first fetch) |
 
 Data pipeline: `scripts/fetch-data.mjs` fetches verified text + Muyassar tafsir
 from AlQuran Cloud into `public/data/` (run once, output committed).

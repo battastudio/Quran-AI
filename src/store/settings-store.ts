@@ -11,6 +11,8 @@ export const DEFAULTS: Settings = {
   reciter: 'ar.alafasy',
   audioBitrate: 128,
   tafsir: 'muyassar',
+  translation: 'none',
+  comfort: false,
   fontSize: 30,
   showWordHints: true,
   tajweed: false,
@@ -40,6 +42,9 @@ function applyTheme(theme: Settings['theme']) {
 function applyAyahFont(font: Settings['ayahFont']) {
   document.documentElement.dataset.ayahfont = font;
 }
+function applyComfort(on: boolean) {
+  document.documentElement.dataset.comfort = on ? 'on' : '';
+}
 
 export const useSettings = create<SettingsState>((set, get) => ({
   ...DEFAULTS,
@@ -51,18 +56,20 @@ export const useSettings = create<SettingsState>((set, get) => ({
     if (!merged.reciter.startsWith('ar.')) merged.reciter = DEFAULTS.reciter;
     applyTheme(merged.theme);
     applyAyahFont(merged.ayahFont);
+    applyComfort(merged.comfort);
     set({ ...merged, hydrated: true });
   },
   set: (patch) => {
     const next = { ...pick(get()), ...patch };
     if (patch.theme) applyTheme(patch.theme);
     if (patch.ayahFont) applyAyahFont(patch.ayahFont);
+    if (patch.comfort !== undefined) applyComfort(patch.comfort);
     set(patch);
     void saveSettings(next);
   },
 }));
 
 function pick(s: SettingsState): Settings {
-  const { theme, ayahFont, readerView, swipeDir, mushafPaper, reciter, audioBitrate, tafsir, fontSize, showWordHints, tajweed, calcMethod, adhanSound, asrModel, voskModelUrl, notify } = s;
-  return { theme, ayahFont, readerView, swipeDir, mushafPaper, reciter, audioBitrate, tafsir, fontSize, showWordHints, tajweed, calcMethod, adhanSound, asrModel, voskModelUrl, notify };
+  const { theme, ayahFont, readerView, swipeDir, mushafPaper, reciter, audioBitrate, tafsir, translation, comfort, fontSize, showWordHints, tajweed, calcMethod, adhanSound, asrModel, voskModelUrl, notify } = s;
+  return { theme, ayahFont, readerView, swipeDir, mushafPaper, reciter, audioBitrate, tafsir, translation, comfort, fontSize, showWordHints, tajweed, calcMethod, adhanSound, asrModel, voskModelUrl, notify };
 }

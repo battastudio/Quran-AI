@@ -8,6 +8,13 @@ import { useWordSheet } from '../words';
 import { listen, speechSupported } from './speech';
 import { accuracy, align, type TokenStatus } from './align';
 import { TasmiLiveBar } from './tasmi-live-bar';
+import { getKv, setKv } from '../../lib/db';
+
+async function logScore(key: string, acc: number) {
+  const m = (await getKv<Record<string, number>>('reciteScores')) ?? {};
+  m[key] = acc;
+  await setKv('reciteScores', m);
+}
 
 const CLS: Record<TokenStatus, string> = { done: 'wtok--ok', current: 'wtok--cur', wrong: 'wtok--bad', pending: '' };
 
@@ -32,7 +39,12 @@ export function LiveTasmi({ surah, ayahs, memorize }: { surah: number; ayahs: Ay
   useEffect(() => { document.getElementById(`tw-${cursor}`)?.scrollIntoView({ block: 'center', behavior: 'smooth' }); }, [cursor]);
 
   function toggle() {
-    if (live) { rec.current?.stop(); setLive(false); return; }
+    if (live) {
+      rec.current?.stop();
+      setLive(false);
+      if (heard) void logScore(`سورة ${surah}`, accuracy(status));
+      return;
+    }
     if (!speechSupported()) return;
     setHeard('');
     rec.current = listen((t) => setHeard(t));

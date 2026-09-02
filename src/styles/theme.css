@@ -58,6 +58,13 @@
   --bg: #14110c; --surface: #1e1913; --text: #e8ddc8; --muted: #b09f82;
   --accent: #c9a54a; --accent-2: #7fae8f; --border: #2c251b; color-scheme: dark;
 }
+:root[data-theme='contrast'] {
+  --bg: #000000; --surface: #0a0a0a; --text: #ffffff; --muted: #cfcfcf;
+  --accent: #ffd400; --accent-2: #00e0ff; --border: #ffffff; color-scheme: dark;
+}
+/* reading comfort (accessibility) */
+:root[data-comfort='on'] .ayah__text, :root[data-comfort='on'] .mushaf__text { line-height: 3.1; letter-spacing: 0.3px; }
+.ayah__tr { color: var(--muted); font-size: 15px; line-height: 1.8; margin: 6px 0 0; padding-inline-start: 6px; border-inline-start: 2px solid var(--border); }
 
 * { box-sizing: border-box; }
 
@@ -494,6 +501,12 @@ select, input[type='range'] { width: 100%; padding: 8px; font-size: 15px; font-f
 .cal-events { list-style: none; margin: 0; padding: 0; }
 .cal-event { display: flex; justify-content: space-between; padding: 12px 8px; border-bottom: 1px solid var(--border); }
 .cal-event__in { color: var(--muted); font-size: 13px; }
+
+.search-filters { display: flex; gap: 10px; align-items: center; margin: 10px 0; flex-wrap: wrap; }
+.scholar-chips { margin-bottom: 12px; }
+
+/* recitation lab */
+.recite-clip { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 8px; }
 
 /* word-by-word view */
 .wbw__ayah { display: flex; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--border); }

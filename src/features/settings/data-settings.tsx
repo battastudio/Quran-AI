@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { exportData, importData, resetAll } from '../../lib/db';
+import { exportMarkdown } from '../../lib/export';
 
 export function DataSettings() {
   const fileRef = useRef<HTMLInputElement>(null);
@@ -32,6 +33,7 @@ export function DataSettings() {
   return (
     <div className="stack">
       <button className="btn btn--sm" onClick={doExport}>تصدير التقدّم (JSON)</button>
+      <button className="btn btn--sm" onClick={() => void exportMarkdown()}>تصدير الملاحظات (Markdown)</button>
       <button className="btn btn--sm" onClick={() => fileRef.current?.click()}>استيراد التقدّم</button>
       <input
         ref={fileRef}
