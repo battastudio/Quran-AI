@@ -27,6 +27,7 @@ export function AyahBlock({ surah, ayah, playing, bookmarked }: Props) {
   const showTafsir = useTafsirSheet((s) => s.show);
   const showNote = useNoteSheet((s) => s.show);
   const playFrom = useAudio((s) => s.play);
+  const cw = useAudio((s) => s.currentWord);
   const [marked, setMarked] = useState(bookmarked);
   const [memo, setMemo] = useState(false);
 
@@ -36,11 +37,14 @@ export function AyahBlock({ surah, ayah, playing, bookmarked }: Props) {
         {tajweed ? (
           <TajweedText surah={surah} ayah={ayah.a} plain={ayah.t} />
         ) : (
-          words(ayah.t).map((w, i) => (
-            <span key={i} className="ayah__word" onClick={() => showWord(w, surah, ayah.a, i + 1)}>
-              {w}{' '}
-            </span>
-          ))
+          words(ayah.t).map((w, i) => {
+            const active = cw?.surah === surah && cw.ayah === ayah.a && cw.index === i;
+            return (
+              <span key={i} className={active ? 'ayah__word ayah__word--playing' : 'ayah__word'} onClick={() => showWord(w, surah, ayah.a, i + 1)}>
+                {w}{' '}
+              </span>
+            );
+          })
         )}
         <span className="ayah__mark">{ayahMark(ayah.a)}</span>
       </p>

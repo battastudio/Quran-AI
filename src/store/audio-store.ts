@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import { ayahAudioUrl } from '../lib/audio-url';
+import { ayahAudioUrl, syncAudioUrl } from '../lib/audio-url';
+import { segmentsFor } from '../lib/quran';
 import { getKv, setKv } from '../lib/db';
 import { useSettings } from './settings-store';
 
@@ -24,8 +25,12 @@ interface AudioState {
   index: number;
   speed: number;
   loop: boolean; // A–B loop the current queue
+  sync: boolean; // word-sync playback (Alafasy + segments)
+  currentWord: { surah: number; ayah: number; index: number } | null;
+  repeatLeft: number; // remaining full-queue repeats (listen-and-repeat)
   error: string | null;
-  play: (queue: Track[], startIndex?: number) => void;
+  play: (queue: Track[], startIndex?: number, repeat?: number) => void;
+  playSync: (queue: Track[], startIndex?: number) => void;
   toggle: () => void;
   stop: () => void;
   next: () => void;
@@ -48,9 +53,16 @@ export const useAudio = create<AudioState>((set, get) => ({
   index: 0,
   speed: 1,
   loop: false,
+  sync: false,
+  currentWord: null,
+  repeatLeft: 1,
   error: null,
-  play: (queue, startIndex = 0) => {
-    set({ queue, error: null });
+  play: (queue, startIndex = 0, repeat = 1) => {
+    set({ queue, error: null, sync: false, currentWord: null, repeatLeft: repeat });
+    playIndex(startIndex, set, get);
+  },
+  playSync: (queue, startIndex = 0) => {
+    set({ queue, error: null, sync: true, currentWord: null, repeatLeft: 1 });
     playIndex(startIndex, set, get);
   },
   toggle: () => {
@@ -64,8 +76,10 @@ export const useAudio = create<AudioState>((set, get) => ({
     }
   },
   stop: () => {
-    audio().pause();
-    set({ playing: null, isPlaying: false, queue: [] });
+    const a = audio();
+    a.pause();
+    a.ontimeupdate = null;
+    set({ playing: null, isPlaying: false, queue: [], currentWord: null });
   },
   next: () => playIndex(get().index + 1, set, get),
   prev: () => playIndex(get().index - 1, set, get),
@@ -80,13 +94,35 @@ function playIndex(i: number, set: SetFn, get: GetFn) {
   const { queue, speed } = get();
   if (i < 0 || i >= queue.length) {
     if (get().loop && queue.length) return playIndex(0, set, get);
+    if (get().repeatLeft > 1 && queue.length) {
+      set({ repeatLeft: get().repeatLeft - 1 });
+      return playIndex(0, set, get);
+    }
     return set({ playing: null, isPlaying: false });
   }
   const track = queue[i];
-  const reciter = useSettings.getState().reciter;
-  set({ playing: track, isPlaying: true, index: i, error: null });
-  startWithFallback(reciter, track, speed, () => playIndex(i + 1, set, get), set);
+  set({ playing: track, isPlaying: true, index: i, error: null, currentWord: null });
+  if (get().sync) startSync(track, speed, () => playIndex(i + 1, set, get), set);
+  else startWithFallback(useSettings.getState().reciter, track, speed, () => playIndex(i + 1, set, get), set);
   mediaSession(i, track, set, get);
+}
+
+// Word-sync playback: Alafasy audio + bundled segments → live current-word.
+function startSync(track: Track, speed: number, onEnd: () => void, set: SetFn) {
+  const a = audio();
+  a.playbackRate = speed;
+  a.onerror = null;
+  a.onended = onEnd;
+  a.src = syncAudioUrl(track.surah, track.ayah);
+  void segmentsFor(track.surah, track.ayah).then((segs) => {
+    a.ontimeupdate = () => {
+      if (!segs) return;
+      const ms = a.currentTime * 1000;
+      const seg = segs.find((s) => ms >= s[1] && ms < s[2]);
+      set({ currentWord: seg ? { surah: track.surah, ayah: track.ayah, index: seg[0] } : null });
+    };
+  });
+  void a.play().catch(() => {});
 }
 
 // Try bitrates until one loads; remember the winner per reciter.
@@ -94,6 +130,7 @@ function startWithFallback(reciter: string, track: Track, speed: number, onEnd: 
   const order = [reciterBitrate(reciter), ...BITRATES].filter((b, i, a) => a.indexOf(b) === i);
   let attempt = 0;
   const a = audio();
+  a.ontimeupdate = null; // clear any sync-mode word tracker
   a.playbackRate = speed;
   a.onended = onEnd;
   const tryNext = () => {

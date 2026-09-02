@@ -27,6 +27,11 @@ export async function allCards(): Promise<HifzCard[]> {
   return allHifz();
 }
 
+// Cards the user struggles with (low ease from repeated lapses).
+export async function weakCards(): Promise<HifzCard[]> {
+  return (await allHifz()).filter((c) => c.ease < 2.1).sort((a, b) => a.ease - b.ease);
+}
+
 export async function forget(key: string): Promise<void> {
   await deleteHifz(key);
 }

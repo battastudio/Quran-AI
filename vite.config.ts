@@ -27,6 +27,12 @@ export default defineConfig({
           { src: 'icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
           { src: 'icon-512-maskable.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
         ],
+        shortcuts: [
+          { name: 'متابعة القراءة', url: '/Quran-AI/#/mushaf' },
+          { name: 'مواقيت الصلاة', url: '/Quran-AI/#/prayer' },
+          { name: 'التسميع', url: '/Quran-AI/#/tasmi' },
+          { name: 'المسبحة', url: '/Quran-AI/#/tasbih' },
+        ],
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,woff2}'],
@@ -37,9 +43,10 @@ export default defineConfig({
         globIgnores: ['**/vosk-*.js', '**/transformers*.js', '**/ort-*.js', '**/*.wasm'],
         runtimeCaching: [
           {
-            // Bundled Quran/tafsir JSON: immutable, cache on first load → offline after.
+            // Bundled JSON: serve from cache (offline) but revalidate in the
+            // background so updated data (e.g. reciter list) refreshes after a rebuild.
             urlPattern: ({ url }) => url.pathname.includes('/data/'),
-            handler: 'CacheFirst',
+            handler: 'StaleWhileRevalidate',
             options: {
               cacheName: 'quran-data',
               expiration: { maxEntries: 50 },
@@ -49,7 +56,7 @@ export default defineConfig({
           {
             // Reciter + per-word audio: cache so downloaded content plays offline.
             urlPattern: ({ url }) =>
-              url.href.includes('cdn.islamic.network') || url.href.includes('qurancdn.com'),
+              url.href.includes('cdn.islamic.network') || url.href.includes('qurancdn.com') || url.href.includes('verses.quran.com'),
             handler: 'CacheFirst',
             options: {
               cacheName: 'reciter-audio',

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Spinner } from '../../components';
 import { getSurah } from '../../lib/quran';
+import { markPageRead } from '../../lib/stats';
 import { allBookmarks } from '../../lib/db';
 import type { Surah } from '../../lib/types';
 import { useAudio } from '../../store/audio-store';
@@ -29,7 +30,12 @@ export function SurahView({ n }: { n: number }) {
     const io = new IntersectionObserver(
       (entries) => {
         const top = entries.filter((e) => e.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (top) markRead(surah.n, Number(top.target.id.replace('ayah-', '')));
+        if (top) {
+          const num = Number(top.target.id.replace('ayah-', ''));
+          markRead(surah.n, num);
+          const ayah = surah.ayahs.find((x) => x.a === num);
+          if (ayah) void markPageRead(ayah.p);
+        }
       },
       { rootMargin: '-45% 0px -45% 0px' },
     );

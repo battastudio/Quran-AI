@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { create } from 'zustand';
 import { BottomSheet, Icon } from '../../components';
 import { arabicNum } from '../../lib/format';
@@ -24,6 +24,9 @@ export function PlayerSheet() {
   const [reciters, setReciters] = useState<Reciter[]>([]);
   const [t, setT] = useState(0);
   const [dur, setDur] = useState(0);
+  const [sleep, setSleep] = useState(0);
+  const sleepRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const stop = useAudio((s) => s.stop);
 
   useEffect(() => {
     void fetch(`${BASE}data/reciters.json`).then((r) => r.json()).then(setReciters);
@@ -34,6 +37,12 @@ export function PlayerSheet() {
     a.addEventListener('timeupdate', onTime);
     return () => a.removeEventListener('timeupdate', onTime);
   }, []);
+
+  function setSleepTimer(m: number) {
+    setSleep(m);
+    if (sleepRef.current) clearTimeout(sleepRef.current);
+    if (m > 0) sleepRef.current = setTimeout(() => { stop(); setSleep(0); }, m * 60_000);
+  }
 
   if (!playing) return null;
   return (
@@ -58,6 +67,16 @@ export function PlayerSheet() {
           {reciters.map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
         </select>
       </label>
+      <div className="field">
+        <span>مؤقّت النوم</span>
+        <div className="chips">
+          {[0, 5, 15, 30].map((m) => (
+            <button key={m} className={sleep === m ? 'chip chip--on' : 'chip'} onClick={() => setSleepTimer(m)}>
+              {m === 0 ? 'إيقاف' : `${arabicNum(m)} د`}
+            </button>
+          ))}
+        </div>
+      </div>
     </BottomSheet>
   );
 }

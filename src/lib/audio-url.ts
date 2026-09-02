@@ -10,3 +10,8 @@ export function ayahAudioUrl(edition: string, g: number, bitrate = 128): string 
 export function wordAudioUrl(surah: number, ayah: number, pos: number): string {
   return `https://audio.qurancdn.com/wbw/${pad(surah)}_${pad(ayah)}_${pad(pos)}.mp3`;
 }
+
+// Alafasy audio matching the bundled word-timing segments (for word-sync highlight).
+export function syncAudioUrl(surah: number, ayah: number): string {
+  return `https://verses.quran.com/Alafasy/mp3/${pad(surah)}${pad(ayah)}.mp3`;
+}

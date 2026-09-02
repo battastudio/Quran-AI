@@ -59,6 +59,24 @@ async function muyassar(): Promise<Record<string, string>> {
   return muyassarCache;
 }
 
+export interface Morphology {
+  r: string; // root (Arabic)
+  l: string; // lemma
+  p: string; // POS code
+}
+let morphCache: Record<string, Morphology> | null = null;
+export async function morphologyFor(surah: number, ayah: number, word: number): Promise<Morphology | null> {
+  if (!morphCache) morphCache = await fetchJson<Record<string, Morphology>>('word-morphology.json');
+  return morphCache[`${surah}:${ayah}:${word}`] ?? null;
+}
+
+let segCache: Record<string, [number, number, number][]> | null = null;
+// Word-timing segments (ms) for Alafasy: [wordIndex, startMs, endMs] per ayah.
+export async function segmentsFor(surah: number, ayah: number): Promise<[number, number, number][] | null> {
+  if (!segCache) segCache = await fetchJson<Record<string, [number, number, number][]>>('segments-alafasy.json');
+  return segCache[`${surah}:${ayah}`] ?? null;
+}
+
 let tajweedCache: Record<string, string> | null = null;
 // Tajwīd-marked text for an ayah (loaded on demand; used by the colored reader).
 export async function tajweedFor(surah: number, ayah: number): Promise<string | null> {

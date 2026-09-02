@@ -91,6 +91,16 @@ export function HomeScreen() {
           <span className="home-card__k">المحفوظات</span>
           <b>الإشارات والملاحظات</b>
         </button>
+        <button className="home-card" onClick={() => nav('/stats')}>
+          <span className="home-card__k">إحصاءاتي</span>
+          <b>التقدّم والأوسمة</b>
+        </button>
+      </div>
+      <div className="tools-row">
+        <button onClick={() => nav('/tasbih')}><span>📿</span>المسبحة</button>
+        <button onClick={() => nav('/asma')}><span>﷽</span>الأسماء الحسنى</button>
+        <button onClick={() => nav('/duas')}><span>🤲</span>أدعية</button>
+        <button onClick={() => nav('/calendar')}><span>🗓️</span>التقويم</button>
       </div>
       <VerseOfDay
         onOpen={(s, a) => { goTo(s, a); nav('/mushaf'); }}

@@ -34,10 +34,10 @@ export function AyahCardsView({ n }: { n: number }) {
         <motion.div
           key={i}
           className="card"
-          initial={{ opacity: 0, x: dir * 60 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: dir * -60 }}
-          transition={{ duration: 0.25 }}
+          initial={{ x: `${dir * 100}%` }}
+          animate={{ x: 0 }}
+          exit={{ x: `${dir * -100}%` }}
+          transition={{ type: 'spring', stiffness: 320, damping: 34 }}
           drag="x"
           dragConstraints={{ left: 0, right: 0 }}
           onDragEnd={(_, info) => { if (info.offset.x < -60) go(1); else if (info.offset.x > 60) go(-1); }}

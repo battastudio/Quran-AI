@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Icon } from '../../components';
 import { getSurah, surahList } from '../../lib/quran';
 import { arabicNum } from '../../lib/format';
+import { addReadingMinute } from '../../lib/stats';
 import type { ReaderView, SurahMeta } from '../../lib/types';
 import { useReader } from '../../store/reader-store';
 import { useAudio } from '../../store/audio-store';
@@ -28,18 +29,24 @@ export function ReaderScreen() {
   const view = useSettings((s) => s.readerView);
   const setView = useSettings((s) => s.set);
   const playQueue = useAudio((s) => s.play);
+  const playSync = useAudio((s) => s.playSync);
   const nav = useNavigate();
   const [list, setList] = useState<SurahMeta[]>([]);
   const [pick, setPick] = useState(false);
 
   useEffect(() => {
     void surahList().then(setList);
+    const id = setInterval(() => { if (!document.hidden) void addReadingMinute(); }, 60_000);
+    return () => clearInterval(id);
   }, []);
 
   const meta = list.find((s) => s.n === surah);
-  async function playSurah() {
+  async function playSurah(sync = false) {
     const s = await getSurah(surah);
-    if (s) playQueue(s.ayahs.map((a) => ({ surah, ayah: a.a, g: a.g })));
+    if (!s) return;
+    const q = s.ayahs.map((a) => ({ surah, ayah: a.a, g: a.g }));
+    if (sync) playSync(q);
+    else playQueue(q);
   }
 
   return (
@@ -63,7 +70,8 @@ export function ReaderScreen() {
           </div>
           <button className="icon-btn" aria-label="ضع علامة القراءة" onClick={setMark}><Icon name="bookmark" /></button>
           <button className="icon-btn" aria-label="بحث" onClick={() => nav('/search')}><Icon name="search" /></button>
-          <button className="icon-btn" aria-label="تشغيل السورة" onClick={playSurah}><Icon name="play" /></button>
+          <button className="icon-btn" aria-label="استماع مع تظليل الكلمات" onClick={() => playSurah(true)}><Icon name="mic" /></button>
+          <button className="icon-btn" aria-label="تشغيل السورة" onClick={() => playSurah(false)}><Icon name="play" /></button>
         </div>
       </header>
 
@@ -82,10 +90,6 @@ export function ReaderScreen() {
         onClose={() => setPick(false)}
         onPick={(n) => { setSurah(n); setPick(false); }}
       />
-      <div className="reader-nav">
-        <button className="icon-btn" disabled={surah <= 1} onClick={() => setSurah(surah - 1)}><Icon name="prev" /></button>
-        <button className="icon-btn" disabled={surah >= 114} onClick={() => setSurah(surah + 1)}><Icon name="next" /></button>
-      </div>
     </section>
   );
 }
