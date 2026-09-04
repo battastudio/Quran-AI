@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Spinner } from '../../components';
+import { AppHeader,Spinner } from '../../components';
 import { getSurah } from '../../lib/quran';
 import { arabicNum } from '../../lib/format';
 import type { Ayah } from '../../lib/types';
@@ -27,7 +27,7 @@ export function TasmiScreen() {
 
   return (
     <section className="screen">
-      <h1 className="screen__title">التسميع</h1>
+      <AppHeader section="التسميع" />
       <div className="tasmi-modes">
         {MODES.map((m) => (
           <button key={m.id} className={mode === m.id ? 'chip chip--on' : 'chip'} onClick={() => setMode(m.id)}>
@@ -35,7 +35,8 @@ export function TasmiScreen() {
           </button>
         ))}
       </div>
-      <p className="field__hint">سورة {arabicNum(surah)} — غيّرها من تبويب المصحف. ميزة تجريبية تتحقّق من الكلمات فقط.</p>
+      <p className="field__hint">سورة {arabicNum(surah)} — غيّرها من تبويب المصحف.</p>
+      <p className="field__hint">التسميع يقيس صحّة الكلمات فقط، ولا يقيّم أحكام التجويد.</p>
       {!ayahs ? (
         <Spinner />
       ) : mode === 'drill' ? (

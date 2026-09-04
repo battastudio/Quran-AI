@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Spinner } from '../../components';
+import { AppHeader, Spinner } from '../../components';
 import { arabicNum } from '../../lib/format';
 import { currentCoords, savedCoords, type Coords } from '../../lib/geo';
 import { useSettings } from '../../store/settings-store';
@@ -21,7 +21,7 @@ export function PrayerScreen() {
   if (!coords)
     return (
       <section className="screen">
-        <h1 className="screen__title">الصلاة</h1>
+        <AppHeader section="الصلاة" />
         {err ? <p className="error">{err}</p> : <Spinner label="جارٍ تحديد الموقع…" />}
       </section>
     );
@@ -32,7 +32,7 @@ export function PrayerScreen() {
 
   return (
     <section className="screen">
-      <h1 className="screen__title">مواقيت الصلاة</h1>
+      <AppHeader section="مواقيت الصلاة والقبلة" />
       <NextCountdown row={upcoming} />
       <ul className="prayer-list">
         {rows.map((r) => (
@@ -58,8 +58,11 @@ function NextCountdown({ row }: { row: PrayerRow }) {
   const h = Math.floor(ms / 3_600_000);
   const m = Math.floor((ms % 3_600_000) / 60_000);
   return (
-    <p className="prayer-next">
-      الصلاة القادمة: <b>{row.name}</b> بعد {arabicNum(h)} س {arabicNum(m)} د
-    </p>
+    <div className="prayer-hero">
+      <span className="prayer-hero__k">الصلاة القادمة</span>
+      <b className="prayer-hero__name">{row.name}</b>
+      <span className="prayer-hero__time">{fmt(row.time)}</span>
+      <span className="prayer-hero__count">بعد {arabicNum(h)} س {arabicNum(m)} د</span>
+    </div>
   );
 }

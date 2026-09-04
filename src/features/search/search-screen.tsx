@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Spinner } from '../../components';
-import { allAyahsFlat, surahList, type FlatAyah } from '../../lib/quran';
+import { AppHeader,Spinner } from '../../components';
+import { allAyahsFlat, surahList, firstAyahOfPage, type FlatAyah } from '../../lib/quran';
 import { normalize } from '../../lib/normalize';
+
+const toLatin = (s: string) => s.replace(/[٠-٩]/g, (d) => String('٠١٢٣٤٥٦٧٨٩'.indexOf(d)));
 import { arabicNum } from '../../lib/format';
 import type { SurahMeta } from '../../lib/types';
 import { useReader } from '../../store/reader-store';
@@ -44,10 +46,18 @@ export function SearchScreen() {
     nav('/mushaf');
   }
 
+  const qn = toLatin(q.trim());
+  const refM = qn.match(/^(\d{1,3})\s*[:،\s]\s*(\d{1,3})$/);
+  const pageM = qn.match(/^ص(?:فحة)?\s*(\d{1,3})$/);
+  async function jump() {
+    if (refM) { open(Number(refM[1]), Number(refM[2])); return; }
+    if (pageM) { const p = await firstAyahOfPage(Number(pageM[1])); open(p.surah, p.ayah); }
+  }
+
   if (!index) return <Spinner />;
   return (
     <section className="screen">
-      <h1 className="screen__title">البحث</h1>
+      <AppHeader section="البحث" />
       <button className="link" onClick={() => nav('/tafsir-search')}>البحث في التفسير ←</button>
       <input
         className="search-input"
@@ -67,6 +77,11 @@ export function SearchScreen() {
           {Array.from({ length: 30 }, (_, i) => <option key={i} value={i + 1}>الجزء {arabicNum(i + 1)}</option>)}
         </select>
       </div>
+      {(refM || pageM) && (
+        <button className="btn btn--block" style={{ marginTop: 12 }} onClick={() => void jump()}>
+          {refM ? `اذهب إلى ${arabicNum(Number(refM[1]))} : ${arabicNum(Number(refM[2]))}` : `اذهب إلى صفحة ${arabicNum(Number(pageM![1]))}`}
+        </button>
+      )}
       <ul className="search-results">
         {results.map((r) => (
           <li key={`${r.s}:${r.a}`}>

@@ -19,48 +19,20 @@
   font-weight: 700; font-display: swap;
 }
 
+/* ---- legacy token aliases → Fable roles (tokens.css). Lets existing
+   components keep working while screens migrate to the role names.
+   --accent, --gold, --paper, --nav-h, --font-ui/quran are role tokens
+   defined in tokens.css (same names) — not re-aliased here. ---- */
 :root {
-  --nav-h: 62px;
-  --radius: 14px;
-  --font-ui: 'IBM Plex Sans Arabic', system-ui, 'Segoe UI', Tahoma, sans-serif;
-  --font-quran: 'Amiri Quran', 'Amiri', serif;
-  --gold: #c9a54a;
-  --paper: #f7f0dd; /* mushaf reading surface (theme-independent) */
-  --ink: #2a2118;
-}
-
-/* ---- themes (selectable in Settings) ---- */
-:root, :root[data-theme='light'] {
-  --bg: #f6f4ee; --surface: #ffffff; --text: #16201a; --muted: #5c6b62;
-  --accent: #1f7a54; --accent-2: #c9a54a; --border: #e2ded3; color-scheme: light;
-}
-:root[data-theme='dark'] {
-  --bg: #0f1511; --surface: #16201a; --text: #eef2ee; --muted: #9db0a5;
-  --accent: #4fbf8b; --accent-2: #d8b662; --border: #24312a; color-scheme: dark;
-}
-:root[data-theme='emerald'] {
-  --bg: #0a2a20; --surface: #103a2d; --text: #eef5ef; --muted: #a9c9ba;
-  --accent: #37c98d; --accent-2: #d8b45f; --border: #1d5240; color-scheme: dark;
-}
-:root[data-theme='royal'] {
-  --bg: #0d0c0f; --surface: #17130c; --text: #efe2c2; --muted: #bda874;
-  --accent: #c9a24a; --accent-2: #e8cf8f; --border: #3a2f1c; color-scheme: dark;
-}
-:root[data-theme='midnight'] {
-  --bg: #071310; --surface: #0e241d; --text: #dfeee7; --muted: #8fb0a3;
-  --accent: #2f9e6f; --accent-2: #b99a5a; --border: #163229; color-scheme: dark;
-}
-:root[data-theme='sepia'] {
-  --bg: #f3ead6; --surface: #fbf5e6; --text: #3a2f21; --muted: #7c6c54;
-  --accent: #1f7a54; --accent-2: #b08927; --border: #e0d3b6; color-scheme: light;
-}
-:root[data-theme='night'] {
-  --bg: #14110c; --surface: #1e1913; --text: #e8ddc8; --muted: #b09f82;
-  --accent: #c9a54a; --accent-2: #7fae8f; --border: #2c251b; color-scheme: dark;
-}
-:root[data-theme='contrast'] {
-  --bg: #000000; --surface: #0a0a0a; --text: #ffffff; --muted: #cfcfcf;
-  --accent: #ffd400; --accent-2: #00e0ff; --border: #ffffff; color-scheme: dark;
+  --radius: var(--r-btn); --radius-lg: var(--r-card); --radius-sm: 8px; --radius-pill: var(--r-chip);
+  --ink: var(--ink-quran);
+  --bg: var(--surface-0); --surface: var(--surface-1); --text: var(--ink-1); --muted: var(--ink-2);
+  --accent-2: var(--gold); --border: var(--line);
+  --card: var(--surface-2); --paper-2: var(--surface-2); --paper-3: var(--surface-3);
+  --gold-soft: var(--gold); --gold-tint: var(--accent-soft);
+  --mint: var(--accent-soft); --mint-2: var(--accent);
+  --shadow-sm: var(--el-1); --shadow-md: var(--el-2); --shadow-lg: var(--el-2);
+  --shadow-fab: 0 10px 24px rgba(15, 92, 72, 0.35);
 }
 /* reading comfort (accessibility) */
 :root[data-comfort='on'] .ayah__text, :root[data-comfort='on'] .mushaf__text { line-height: 3.1; letter-spacing: 0.3px; }

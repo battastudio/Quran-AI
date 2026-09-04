@@ -1,0 +1,117 @@
+/* ============================================================
+   نور القرآن — design tokens (Fable spec §D.8), authoritative.
+   Loaded FIRST (before theme.css/nour.css). Legacy tokens in
+   theme.css are aliased to these role names.
+   ============================================================ */
+:root {
+  /* type families */
+  --font-quran: 'Amiri Quran', 'KFGQPC Uthman Taha Naskh', serif;
+  --font-ui: 'IBM Plex Sans Arabic', 'Noto Naskh Arabic UI', system-ui, sans-serif;
+  --type-scale: 1; --ayah-scale: 1;
+  --fs-ayah-xl: calc(40px * var(--ayah-scale)); --fs-ayah-lg: calc(32px * var(--ayah-scale));
+  --fs-ayah-md: calc(26px * var(--ayah-scale)); --fs-ayah-sm: calc(22px * var(--ayah-scale));
+  --fs-3xl: calc(44px * var(--type-scale)); --fs-xl: calc(28px * var(--type-scale)); --fs-lg: calc(22px * var(--type-scale));
+  --fs-md: calc(17px * var(--type-scale)); --fs-sm: calc(14px * var(--type-scale)); --fs-xs: calc(12px * var(--type-scale));
+  --lh-quran: 2; --lh-body: 1.7; --lh-tight: 1.3;
+  /* space, radius, elevation */
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 20px; --sp-6: 24px; --sp-8: 32px; --sp-10: 40px; --sp-12: 48px;
+  --gutter: 16px;
+  --r-chip: 999px; --r-btn: 12px; --r-input: 12px; --r-card: 16px; --r-sheet: 24px 24px 0 0; --r-fab: 50%;
+  --el-1: 0 1px 2px rgba(31,26,20,.06), 0 1px 1px rgba(31,26,20,.04);
+  --el-2: 0 4px 12px rgba(31,26,20,.08), 0 1px 3px rgba(31,26,20,.06);
+  --el-3: 0 10px 28px rgba(31,26,20,.14), 0 2px 6px rgba(31,26,20,.08);
+  /* motion */
+  --dur-fast: 120ms; --dur-base: 200ms; --dur-slow: 320ms; --dur-reverent: 480ms;
+  --ease-standard: cubic-bezier(.2,0,0,1); --ease-emphasized: cubic-bezier(.05,.7,.1,1); --ease-exit: cubic-bezier(.3,0,.8,.15);
+  /* sizes */
+  --tap: 44px; --tap-lg: 48px; --row: 56px; --nav-h: 64px; --fab: 64px;
+  /* tajwid (light) */
+  --tj-ghunnah: #2E7D32; --tj-ikhfa: #8E24AA; --tj-idgham: #1565C0; --tj-iqlab: #00838F; --tj-qalqalah: #C62828;
+  --tj-madd-2: #EF6C00; --tj-madd-4: #D84315; --tj-madd-6: #B71C1C; --tj-silent: #9E9E9E;
+  /* highlights */
+  --hl-1: #FFE08A; --hl-2: #B9E4C9; --hl-3: #BFD7FF; --hl-4: #F4C7C3; --hl-5: #E3CCF6;
+  /* scholars */
+  --scholar-muyassar: #0F5C48; --scholar-kathir: #6A4C93; --scholar-tabari: #1565C0; --scholar-saadi: #2E7D32;
+  --scholar-qurtubi: #B8902E; --scholar-baghawi: #8E4A2A; --scholar-irab: #455A64;
+}
+
+/* ---------- core themes (Fable §D.2) ---------- */
+:root, [data-theme='light'] {
+  --surface-0: #F6F3EC; --surface-1: #FFFFFF; --surface-2: #FBF9F4; --surface-3: #EEEAE0; --paper: #F3ECD9;
+  --ink-quran: #1F1A14; --ink-1: #1F2326; --ink-2: #4A5158; --ink-3: #7D858B;
+  --accent: #0F5C48; --accent-strong: #0F5C48; --accent-soft: #DDEDE7; --on-accent: #FFFFFF;
+  --gold: #B8902E; --success: #2E7D4F; --warn: #A8672A; --danger: #9E3B3B; --line: #E4DFD3; --scrim: rgba(20,16,10,.4);
+  --highlight-audio: #FFF1BF; --highlight-search: #DCEBFF; color-scheme: light;
+}
+[data-theme='dark'] {
+  --surface-0: #0E1214; --surface-1: #151B1E; --surface-2: #1C2327; --surface-3: #25303A; --paper: #1A1F1C;
+  --ink-quran: #EDE6D6; --ink-1: #EEF1F2; --ink-2: #B8C0C4; --ink-3: #7E8A91;
+  --accent: #3FA98B; --accent-strong: #3FA98B; --accent-soft: #173C33; --on-accent: #0A1411;
+  --gold: #D4B25A; --success: #5DC48B; --warn: #E0A15A; --danger: #E07A7A; --line: #2A3339; --scrim: rgba(0,0,0,.6);
+  --highlight-audio: #3A3416; --highlight-search: #1E3550;
+  --el-1: 0 1px 2px rgba(0,0,0,.4); --el-2: 0 4px 14px rgba(0,0,0,.5); --el-3: 0 12px 32px rgba(0,0,0,.6);
+  --tj-ghunnah: #7BD389; --tj-ikhfa: #CE93D8; --tj-idgham: #82B1FF; --tj-iqlab: #80DEEA; --tj-qalqalah: #EF9A9A;
+  --tj-madd-2: #FFB74D; --tj-madd-4: #FF8A65; --tj-madd-6: #EF5350; --tj-silent: #757575; color-scheme: dark;
+}
+[data-theme='emerald'] {
+  --surface-0: #062B25; --surface-1: #0A3A32; --surface-2: #0F463C; --surface-3: #165448; --paper: #F3ECD9;
+  --ink-quran: #F1EBDD; --ink-1: #EAF4F0; --ink-2: #B7D1C8; --ink-3: #7EA79A;
+  --accent: #4FC3A1; --accent-strong: #4FC3A1; --accent-soft: #1E5F50; --on-accent: #06231D;
+  --gold: #D9B95B; --success: #7EDBA9; --warn: #E6B36B; --danger: #E68A8A; --line: #1D5A4D; --scrim: rgba(0,10,8,.6);
+  --highlight-audio: #2A5F2A; --highlight-search: #1E4F5A; color-scheme: dark;
+}
+[data-theme='royal'] {
+  --surface-0: #0F1A33; --surface-1: #16244A; --surface-2: #1D2F5E; --surface-3: #26397A; --paper: #F3ECD9;
+  --ink-quran: #F1EBDD; --ink-1: #ECEFF8; --ink-2: #B9C3E3; --ink-3: #7F8DB8;
+  --accent: #C9A54A; --accent-strong: #B8933D; --accent-soft: #3A3320; --on-accent: #1A1405;
+  --gold: #E2C46A; --success: #7EDBA9; --warn: #E6B36B; --danger: #E68A8A; --line: #2B3F7A; --scrim: rgba(0,4,16,.6);
+  --highlight-audio: #3B3A1E; --highlight-search: #243D73; color-scheme: dark;
+}
+/* extra themes kept selectable — mapped onto the role set (§D.2 "derived") */
+[data-theme='midnight'] {
+  --surface-0: #071310; --surface-1: #0E241D; --surface-2: #123329; --surface-3: #163229; --paper: #14201B;
+  --ink-quran: #EAF3EE; --ink-1: #DFEEE7; --ink-2: #8FB0A3; --ink-3: #6E8f82;
+  --accent: #2F9E6F; --accent-strong: #2F9E6F; --accent-soft: #123f30; --on-accent: #04140d;
+  --gold: #B99A5A; --success: #5DC48B; --warn: #E0A15A; --danger: #E07A7A; --line: #163229; --scrim: rgba(0,6,4,.6);
+  --highlight-audio: #274a30; --highlight-search: #17384a; color-scheme: dark;
+}
+[data-theme='sepia'] {
+  --surface-0: #F3EAD6; --surface-1: #FBF5E6; --surface-2: #F7EEDA; --surface-3: #ECDFC2; --paper: #F3ECD9;
+  --ink-quran: #3A2F21; --ink-1: #3A2F21; --ink-2: #6E5C42; --ink-3: #927e5f;
+  --accent: #1F7A54; --accent-strong: #1F7A54; --accent-soft: #dce9df; --on-accent: #ffffff;
+  --gold: #B08927; --success: #2E7D4F; --warn: #A8672A; --danger: #9E3B3B; --line: #E0D3B6; --scrim: rgba(40,30,12,.4);
+  --highlight-audio: #F3E2A6; --highlight-search: #DCEBFF; color-scheme: light;
+}
+[data-theme='night'] {
+  --surface-0: #14110c; --surface-1: #1E1913; --surface-2: #262019; --surface-3: #2c251b; --paper: #1E1913;
+  --ink-quran: #EFE3CC; --ink-1: #E8DDC8; --ink-2: #B09F82; --ink-3: #8a7a60;
+  --accent: #C9A54A; --accent-strong: #C9A54A; --accent-soft: #33291a; --on-accent: #1A1405;
+  --gold: #D4B25A; --success: #7FAE8F; --warn: #E0A15A; --danger: #E07A7A; --line: #2C251B; --scrim: rgba(0,0,0,.6);
+  --highlight-audio: #3a3416; --highlight-search: #23324a; color-scheme: dark;
+}
+[data-theme='contrast'] {
+  --surface-0: #000000; --surface-1: #0A0A0A; --surface-2: #0f0f0f; --surface-3: #1a1a1a; --paper: #0A0A0A;
+  --ink-quran: #FFFFFF; --ink-1: #FFFFFF; --ink-2: #FFFFFF; --ink-3: #E0E0E0;
+  --accent: #FFD400; --accent-strong: #FFD400; --accent-soft: #333300; --on-accent: #000000;
+  --gold: #FFD400; --success: #00E676; --warn: #FFB300; --danger: #FF5252; --line: #FFFFFF; --scrim: rgba(0,0,0,.75);
+  --highlight-audio: #333300; --highlight-search: #002b33; color-scheme: dark;
+}
+/* emerald/royal have a light parchment page on a dark theme → keep dark ink on it.
+   (dark/night/midnight have a dark --paper, so they keep the light ink.) */
+[data-theme='emerald'] .mushaf, [data-theme='royal'] .mushaf { --ink-quran: #1F1A14; }
+[data-contrast='high'] { --ink-2: var(--ink-1); --ink-3: var(--ink-1); --line: currentColor; --accent-soft: transparent; }
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur-fast: 0ms; --dur-base: 0ms; --dur-slow: 0ms; --dur-reverent: 120ms; }
+}
+
+/* ---------- type utility classes ---------- */
+.t-ayah-xl { font-family: var(--font-quran); font-size: var(--fs-ayah-xl); line-height: var(--lh-quran); }
+.t-ayah-lg { font-family: var(--font-quran); font-size: var(--fs-ayah-lg); line-height: var(--lh-quran); }
+.t-ayah-md { font-family: var(--font-quran); font-size: var(--fs-ayah-md); line-height: var(--lh-quran); }
+.t-ayah-sm { font-family: var(--font-quran); font-size: var(--fs-ayah-sm); line-height: 1.9; }
+.t-3xl { font-size: var(--fs-3xl); font-weight: 600; line-height: 1.1; }
+.t-xl { font-size: var(--fs-xl); font-weight: 600; line-height: var(--lh-tight); }
+.t-lg { font-size: var(--fs-lg); font-weight: 600; line-height: 1.4; }
+.t-md { font-size: var(--fs-md); font-weight: 400; line-height: var(--lh-body); }
+.t-sm { font-size: var(--fs-sm); font-weight: 500; line-height: 1.5; }
+.t-xs { font-size: var(--fs-xs); font-weight: 500; line-height: var(--lh-tight); }

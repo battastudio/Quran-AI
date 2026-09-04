@@ -9,7 +9,7 @@ import { PrayerScreen } from '../features/prayer';
 import { HifzScreen, PracticeScreen } from '../features/hifz';
 import { SearchScreen } from '../features/search';
 import { TafsirSearch } from '../features/tafsir';
-import { KhatmahScreen } from '../features/khatmah';
+import { KhatmahScreen, KhatmahJoin } from '../features/khatmah';
 import { BookmarksScreen } from '../features/bookmarks';
 import { AdhkarScreen } from '../features/adhkar';
 import { StatsScreen } from '../features/stats';
@@ -19,6 +19,8 @@ import { AsmaScreen } from '../features/asma';
 import { DuasScreen } from '../features/duas';
 import { CalendarScreen } from '../features/calendar';
 import { ReciteScreen } from '../features/recite';
+import { AchievementsScreen, MasteryScreen } from '../features/achievements';
+import { SharedAyah, TodayRedirect } from './deep-links';
 import { useSettings } from '../store/settings-store';
 import { useReader } from '../store/reader-store';
 import { runReminders } from '../features/notifications';
@@ -31,6 +33,8 @@ const router = createHashRouter([
     children: [
       { path: '/', element: <HomeScreen /> },
       { path: '/mushaf', element: <ReaderScreen /> },
+      { path: '/s/:s/:a', element: <SharedAyah /> },
+      { path: '/today', element: <TodayRedirect /> },
       { path: '/tasmi', element: <TasmiScreen /> },
       { path: '/prayer', element: <PrayerScreen /> },
       { path: '/hifz', element: <HifzScreen /> },
@@ -40,6 +44,7 @@ const router = createHashRouter([
       { path: '/root/:root', element: <OccurrencesScreen /> },
       { path: '/similar/:s/:a', element: <OccurrencesScreen /> },
       { path: '/khatmah', element: <KhatmahScreen /> },
+      { path: '/khatmah/join', element: <KhatmahJoin /> },
       { path: '/bookmarks', element: <BookmarksScreen /> },
       { path: '/adhkar', element: <AdhkarScreen /> },
       { path: '/stats', element: <StatsScreen /> },
@@ -48,6 +53,8 @@ const router = createHashRouter([
       { path: '/duas', element: <DuasScreen /> },
       { path: '/calendar', element: <CalendarScreen /> },
       { path: '/recite-lab', element: <ReciteScreen /> },
+      { path: '/achievements', element: <AchievementsScreen /> },
+      { path: '/mastery/:surah', element: <MasteryScreen /> },
       { path: '/settings', element: <SettingsScreen /> },
       { path: '*', element: <Navigate to="/" replace /> },
     ],

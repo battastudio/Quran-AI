@@ -1,11 +1,13 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AppHeader } from '../../components';
 import { firstAyahOfPage } from '../../lib/quran';
 import { arabicNum } from '../../lib/format';
 import { dayKey } from '../../lib/streak';
 import { progressPct, todaysRange } from '../../lib/khatmah';
 import { useReader } from '../../store/reader-store';
 import { useKhatmah } from './khatmah-store';
+import { GroupInvite } from './group-invite';
 
 const OPTIONS = [7, 15, 30, 60];
 
@@ -18,7 +20,7 @@ export function KhatmahScreen() {
   if (!plan)
     return (
       <section className="screen">
-        <h1 className="screen__title">ختمة القرآن</h1>
+        <AppHeader section="خطة الختمة" />
         <p className="field__hint">اختر مدّة إتمام الختمة:</p>
         <div className="chips">
           {OPTIONS.map((d) => (
@@ -27,6 +29,7 @@ export function KhatmahScreen() {
             </button>
           ))}
         </div>
+        <GroupInvite />
       </section>
     );
 
@@ -39,7 +42,7 @@ export function KhatmahScreen() {
 
   return (
     <section className="screen">
-      <h1 className="screen__title">ختمة القرآن</h1>
+      <AppHeader section="خطة الختمة" />
       <div className="stat">
         <b>{arabicNum(progressPct(plan))}٪</b>
         <span>من الختمة ({arabicNum(plan.days)} يوم)</span>
@@ -52,6 +55,7 @@ export function KhatmahScreen() {
         <button className="btn btn--sm" onClick={markTodayDone}>تم إنجاز ورد اليوم</button>
         <button className="link" onClick={cancel}>إلغاء الختمة</button>
       </div>
+      <GroupInvite />
     </section>
   );
 }

@@ -5,29 +5,50 @@ import { arabicNum } from '../../lib/format';
 import { getKv } from '../../lib/db';
 import { computeStreak } from '../../lib/streak';
 import { savedCoords } from '../../lib/geo';
+import { AppHeader, Icon } from '../../components';
 import { useReader } from '../../store/reader-store';
 import { useSettings } from '../../store/settings-store';
+import { useAuth } from '../auth';
 import { useKhatmah } from '../khatmah';
 import { InstallButton } from '../install';
 import { dueCards } from '../hifz';
 import { computeTimes } from '../prayer';
+import { selectTodayWird, type TodayWird } from '../../lib/wird';
 import { VerseOfDay } from './verse-of-day';
+import { GreetingCard } from './greeting-card';
+import { ContinueCard } from './continue-card';
+import { ReviewWird } from './review-wird';
+import { FridayBanner } from './friday-banner';
+import { QuickTools } from './quick-tools';
+
+const MORE = [
+  { to: '/search', label: 'البحث', icon: 'search' },
+  { to: '/stats', label: 'إحصاءاتي', icon: 'grid' },
+  { to: '/bookmarks', label: 'المحفوظات', icon: 'bookmark' },
+  { to: '/asma', label: 'الأسماء', icon: 'star' },
+  { to: '/calendar', label: 'التقويم', icon: 'clock' },
+  { to: '/recite-lab', label: 'معمل التلاوة', icon: 'mic' },
+  { to: '/achievements', label: 'الشهادات', icon: 'check' },
+];
 
 export function HomeScreen() {
   const nav = useNavigate();
   const goTo = useReader((s) => s.goTo);
   const lastRead = useReader((s) => s.lastRead);
-  const mark = useReader((s) => s.mark);
   const method = useSettings((s) => s.calcMethod);
+  const userName = useAuth((s) => s.user?.displayName ?? null);
   const plan = useKhatmah((s) => s.plan);
   const hydrateK = useKhatmah((s) => s.hydrate);
   const [streak, setStreak] = useState(0);
   const [due, setDue] = useState(0);
   const [nextPrayer, setNextPrayer] = useState<string | null>(null);
   const [names, setNames] = useState<Record<number, string>>({});
+  const [cont, setCont] = useState<{ text: string; juz: number } | null>(null);
+  const [wird, setWird] = useState<TodayWird | null>(null);
 
   useEffect(() => {
     void hydrateK();
+    void selectTodayWird().then(setWird);
     void getKv<string[]>('streakDays').then((d) => setStreak(computeStreak(d ?? [])));
     void dueCards().then((c) => setDue(c.length));
     void surahList().then((l) => setNames(Object.fromEntries(l.map((s) => [s.n, s.name]))));
@@ -35,79 +56,55 @@ export function HomeScreen() {
       if (!c) return;
       const { rows } = computeTimes(c, method);
       const up = rows.find((r) => r.key !== 'sunrise' && r.time.getTime() > Date.now());
-      if (up) setNextPrayer(`${up.name} ${arabicNum(up.time.getHours() % 12 || 12)}:${arabicNum(String(up.time.getMinutes()).padStart(2, '0'))}`);
+      if (up) setNextPrayer(`صلاة ${up.name} ${arabicNum(up.time.getHours() % 12 || 12)}:${arabicNum(String(up.time.getMinutes()).padStart(2, '0'))}`);
     });
   }, [method, hydrateK]);
 
+  useEffect(() => {
+    if (!lastRead) { setCont(null); return; }
+    void allAyahsFlat().then((all) => {
+      const y = all.find((v) => v.s === lastRead.surah && v.a === lastRead.ayah);
+      if (y) setCont({ text: y.t, juz: y.j });
+    });
+  }, [lastRead]);
+
+  const name = (n: number) => names[n] ?? `سورة ${arabicNum(n)}`;
+  const wirdPct = plan ? Math.min(100, Math.round((plan.donePages / 604) * 100)) : null;
+  const openReader = (s: number, a: number) => { goTo(s, a); nav('/mushaf'); };
+
   return (
-    <section className="screen">
-      <h1 className="screen__title">نور القرآن</h1>
-      <p className="home-sub">السلام عليكم ورحمة الله</p>
+    <section className="screen home">
+      <AppHeader section="الرئيسية" />
+      <GreetingCard name={userName} nextPrayer={nextPrayer} />
       <InstallButton block />
-      <div className="home-grid">
-        {lastRead && (
-          <button className="home-card" onClick={() => { goTo(lastRead.surah, lastRead.ayah); nav('/mushaf'); }}>
-            <span className="home-card__k">متابعة القراءة</span>
-            <b>{names[lastRead.surah] ?? `سورة ${arabicNum(lastRead.surah)}`} · {arabicNum(lastRead.ayah)}</b>
-          </button>
-        )}
-        {mark && (
-          <button className="home-card" onClick={() => { goTo(mark.surah, mark.ayah); nav('/mushaf'); }}>
-            <span className="home-card__k">العودة إلى العلامة</span>
-            <b>{names[mark.surah] ?? `سورة ${arabicNum(mark.surah)}`} · {arabicNum(mark.ayah)}</b>
-          </button>
-        )}
-        <button className="home-card" onClick={() => nav('/hifz')}>
-          <span className="home-card__k">مراجعة الحفظ</span>
-          <b>{arabicNum(due)} آية اليوم</b>
-        </button>
-        <div className="home-card">
-          <span className="home-card__k">التتابع 🔥</span>
-          <b>{arabicNum(streak)} يوم</b>
+      {lastRead && cont && (
+        <ContinueCard
+          surahName={name(lastRead.surah)}
+          ayah={lastRead.ayah}
+          juz={cont.juz}
+          text={cont.text}
+          onOpen={() => openReader(lastRead.surah, lastRead.ayah)}
+        />
+      )}
+      <ReviewWird due={due} wirdPct={wirdPct} wird={wird} onReview={() => nav('/hifz')} onWird={() => nav('/khatmah')} />
+      <FridayBanner onKahf={() => openReader(18, 1)} />
+      <QuickTools />
+      <VerseOfDay onOpen={openReader} name={name} load={allAyahsFlat} />
+      <div>
+        <div className="sec-head"><span className="sec-head__title">أدوات أخرى</span></div>
+        <div className="tools-row">
+          {MORE.map((m) => (
+            <button key={m.to} onClick={() => nav(m.to)}>
+              <span aria-hidden="true"><Icon name={m.icon} size={20} /></span>
+              {m.label}
+            </button>
+          ))}
         </div>
-        {nextPrayer && (
-          <button className="home-card" onClick={() => nav('/prayer')}>
-            <span className="home-card__k">الصلاة القادمة</span>
-            <b>{nextPrayer}</b>
-          </button>
-        )}
-        <button className="home-card" onClick={() => nav('/khatmah')}>
-          <span className="home-card__k">الختمة</span>
-          <b>{plan ? `${arabicNum(plan.days)} يوم` : 'ابدأ ختمة'}</b>
-        </button>
-        <button className="home-card" onClick={() => nav('/tasmi')}>
-          <span className="home-card__k">التسميع</span>
-          <b>تدرّب الآن</b>
-        </button>
-        <button className="home-card" onClick={() => nav('/search')}>
-          <span className="home-card__k">البحث</span>
-          <b>ابحث في القرآن</b>
-        </button>
-        <button className="home-card" onClick={() => nav('/adhkar')}>
-          <span className="home-card__k">الأذكار</span>
-          <b>الصباح والمساء</b>
-        </button>
-        <button className="home-card" onClick={() => nav('/bookmarks')}>
-          <span className="home-card__k">المحفوظات</span>
-          <b>الإشارات والملاحظات</b>
-        </button>
-        <button className="home-card" onClick={() => nav('/stats')}>
-          <span className="home-card__k">إحصاءاتي</span>
-          <b>التقدّم والأوسمة</b>
-        </button>
       </div>
-      <div className="tools-row">
-        <button onClick={() => nav('/tasbih')}><span>📿</span>المسبحة</button>
-        <button onClick={() => nav('/asma')}><span>﷽</span>الأسماء الحسنى</button>
-        <button onClick={() => nav('/duas')}><span>🤲</span>أدعية</button>
-        <button onClick={() => nav('/calendar')}><span>🗓️</span>التقويم</button>
-        <button onClick={() => nav('/recite-lab')}><span>🎙️</span>معمل التلاوة</button>
-      </div>
-      <VerseOfDay
-        onOpen={(s, a) => { goTo(s, a); nav('/mushaf'); }}
-        name={(n) => names[n] ?? `سورة ${arabicNum(n)}`}
-        load={allAyahsFlat}
-      />
+      <p className="home-foot">
+        <b>مصحف المدينة النبوية</b> — رواية حفص عن عاصم<br />
+        جاهز للعمل بدون إنترنت · الاستمرار {arabicNum(streak)} يوم
+      </p>
     </section>
   );
 }

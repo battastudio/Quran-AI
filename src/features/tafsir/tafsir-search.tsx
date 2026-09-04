@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Spinner } from '../../components';
+import { AppHeader,Spinner } from '../../components';
 import { normalize } from '../../lib/normalize';
 import { arabicNum } from '../../lib/format';
 import { useReader } from '../../store/reader-store';
@@ -37,7 +37,7 @@ export function TafsirSearch() {
 
   return (
     <section className="screen">
-      <h1 className="screen__title">البحث في التفسير</h1>
+      <AppHeader section="البحث في التفسير" />
       <input className="search-input" placeholder="ابحث في التفسير الميسّر…" value={q} onChange={(e) => setQ(e.target.value)} autoFocus />
       <ul className="search-results">
         {results.map((r) => (

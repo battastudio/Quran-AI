@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Spinner } from '../../components';
+import { AppHeader,Spinner } from '../../components';
 import { arabicNum } from '../../lib/format';
 import { getKv } from '../../lib/db';
 import { computeStreak } from '../../lib/streak';
@@ -44,20 +44,22 @@ export function StatsScreen() {
 
   return (
     <section className="screen">
-      <h1 className="screen__title">إحصاءاتي</h1>
+      <AppHeader section="إحصاءاتي" />
       <div className="hifz-stats">
         <div className="stat"><b>{arabicNum(state.minutes.today)}</b><span>دقائق اليوم</span></div>
         <div className="stat"><b>{arabicNum(state.minutes.total)}</b><span>إجمالي الدقائق</span></div>
         <div className="stat"><b>{arabicNum(earned.filter((b) => b.earned).length)}</b><span>أوسمة</span></div>
       </div>
 
-      <h2 className="stats-h">المواظبة</h2>
-      <div className="heatmap">
-        {state.grid.map((week, w) => (
-          <div key={w} className="heatmap__week">
-            {week.map((on, d) => <span key={d} className={on ? 'heatmap__cell heatmap__cell--on' : 'heatmap__cell'} />)}
-          </div>
-        ))}
+      <div className="stats-rug">
+        <h2 className="stats-h">سجادة الإنجاز · المواظبة</h2>
+        <div className="heatmap">
+          {state.grid.map((week, w) => (
+            <div key={w} className="heatmap__week">
+              {week.map((on, d) => <span key={d} className={on ? 'heatmap__cell heatmap__cell--on' : 'heatmap__cell'} />)}
+            </div>
+          ))}
+        </div>
       </div>
 
       <h2 className="stats-h">تقدّم الأجزاء</h2>

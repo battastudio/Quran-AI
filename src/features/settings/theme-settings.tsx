@@ -8,9 +8,9 @@ const SWIPES: { id: SwipeDir; label: string }[] = [
 ];
 
 const THEMES: { id: ThemeMode; label: string; swatch: string }[] = [
-  { id: 'auto', label: 'تلقائي', swatch: 'linear-gradient(135deg,#f6f4ee 50%,#0f1511 50%)' },
-  { id: 'light', label: 'فاتح', swatch: '#f6f4ee' },
-  { id: 'dark', label: 'داكن', swatch: '#0f1511' },
+  { id: 'auto', label: 'تلقائي', swatch: 'linear-gradient(135deg,#FDF2E7 50%,#0E1613 50%)' },
+  { id: 'light', label: 'نور فاتح', swatch: 'linear-gradient(135deg,#FDF2E7 55%,#004333)' },
+  { id: 'dark', label: 'نور داكن', swatch: 'linear-gradient(135deg,#0E1613 55%,#0F5C48)' },
   { id: 'emerald', label: 'زمرّدي', swatch: 'linear-gradient(135deg,#103a2d,#d8b45f)' },
   { id: 'royal', label: 'ملكي', swatch: 'linear-gradient(135deg,#0d0c0f 55%,#c9a24a)' },
   { id: 'midnight', label: 'أخضر داكن', swatch: '#071310' },

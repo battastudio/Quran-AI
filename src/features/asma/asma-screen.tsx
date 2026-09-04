@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Spinner } from '../../components';
+import { AppHeader,Spinner } from '../../components';
 import { arabicNum } from '../../lib/format';
 
 interface Name { n: number; name: string; t: string }
@@ -11,7 +11,7 @@ export function AsmaScreen() {
   if (!names) return <Spinner />;
   return (
     <section className="screen">
-      <h1 className="screen__title">أسماء الله الحسنى</h1>
+      <AppHeader section="أسماء الله الحسنى" />
       <div className="asma-grid">
         {names.map((x) => (
           <div key={x.n} className="asma-cell">

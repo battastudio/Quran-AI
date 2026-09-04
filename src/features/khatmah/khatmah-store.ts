@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { getKv, setKv } from '../../lib/db';
 import { dayKey } from '../../lib/streak';
 import { expectedByToday, type KhatmahPlan } from '../../lib/khatmah';
+import { useInvite } from '../share/invite';
 
 interface KhatmahState {
   plan: KhatmahPlan | null;
@@ -25,6 +26,7 @@ export const useKhatmah = create<KhatmahState>((set, get) => ({
     const next = { ...plan, donePages: Math.max(plan.donePages, expectedByToday(plan, dayKey())) };
     set({ plan: next });
     void setKv('khatmah', next);
+    useInvite.getState().trigger(); // gratitude moment → one-time da'wah invite
   },
   cancel: () => {
     set({ plan: null });

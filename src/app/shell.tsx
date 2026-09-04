@@ -7,6 +7,7 @@ import { NoteSheet } from '../features/bookmarks';
 import { AyahActions } from '../features/reader';
 import { InstallPrompt, UpdateToast } from '../features/install';
 import { Onboarding } from '../features/onboarding';
+import { InviteSheet } from '../features/share';
 import { BottomBar } from './bottom-bar';
 
 export function Shell() {
@@ -35,6 +36,7 @@ export function Shell() {
       <TafsirSheet />
       <NoteSheet />
       <AyahActions />
+      <InviteSheet />
       <Onboarding />
     </div>
   );

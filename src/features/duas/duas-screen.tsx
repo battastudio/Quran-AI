@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Spinner } from '../../components';
+import { AppHeader,Spinner } from '../../components';
 import { arabicNum } from '../../lib/format';
 import { useReader } from '../../store/reader-store';
 
@@ -15,7 +15,7 @@ export function DuasScreen() {
   if (!duas) return <Spinner />;
   return (
     <section className="screen">
-      <h1 className="screen__title">أدعية من القرآن</h1>
+      <AppHeader section="أدعية من القرآن" />
       <ul className="dua-list">
         {duas.map((d, i) => (
           <li key={i}>

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Spinner } from '../../components';
+import { AppHeader, Spinner } from '../../components';
 import { DhikrCounter } from './dhikr-counter';
 
 interface Category {
@@ -42,7 +42,7 @@ export function AdhkarScreen() {
     return (
       <section className="screen">
         <button className="link" onClick={() => setActive(null)}>‹ كل الأذكار</button>
-        <h1 className="screen__title">{active.title}</h1>
+        <AppHeader section={active.title} />
         <div ref={listRef}>
           {active.items.map((t, i) => (
             <div id={`dh-${i}`} key={i} className={i === idx ? 'dh-current' : ''}>
@@ -57,7 +57,7 @@ export function AdhkarScreen() {
   const open = (c: Category) => { setActive(c); setIdx(0); };
   return (
     <section className="screen">
-      <h1 className="screen__title">الأذكار</h1>
+      <AppHeader section="الأذكار" />
       <div className="chips adhkar-tabs">
         {quick.map((t) => <button key={t.label} className="chip" onClick={() => open(t.cat!)}>{t.label}</button>)}
       </div>

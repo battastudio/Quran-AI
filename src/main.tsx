@@ -2,7 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { App } from './app/app';
 import { ErrorBoundary } from './app/error-boundary';
+import './styles/tokens.css';
 import './styles/theme.css';
+import './styles/nour.css';
 
 // SW registration is handled by <UpdateToast/> via useRegisterSW.
 

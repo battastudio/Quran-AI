@@ -10,6 +10,12 @@ The app is a static PWA. `npm run build` outputs `dist/`, which GitHub Pages ser
    **This must be done or `deploy` fails with 404** (Pages not enabled).
 3. Push to `main`. The `.github/workflows/deploy.yml` action builds and deploys.
 
+## Pre-push checklist
+- [ ] `npx tsc --noEmit && npm run lint && npm run test && npm run build` all green.
+- [ ] CI runs `node scripts/gen-og.mjs` before build (regenerates `public/og/*` link-preview
+      pages from current data). Run it locally too if you changed Quran data.
+- [ ] On `main`, push → watch the **Actions** run go green → hard-refresh the live URL.
+
 ## URL
 `https://battastudio.github.io/Quran-AI/`
 

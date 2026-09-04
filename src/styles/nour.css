@@ -1,0 +1,273 @@
+/* ============================================================
+   Nour design system — shared polish + screen specifics.
+   Loaded after theme.css so these refinements win the cascade.
+   ============================================================ */
+
+/* ---- app header (brand right, actions leading) ---- */
+.app-header {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; padding: 4px 0 14px;
+}
+.app-header__actions { display: flex; gap: 8px; }
+.hicon {
+  width: 40px; height: 40px; display: grid; place-items: center;
+  border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--surface); color: var(--text); cursor: pointer;
+}
+.app-header__brand { display: flex; align-items: center; gap: 10px; }
+.app-header__titles { text-align: end; line-height: 1.25; }
+.app-header__name { font-weight: 700; color: var(--accent); font-size: 17px; }
+.app-header__section { color: var(--muted); font-size: 12px; }
+.app-header__logo {
+  width: 40px; height: 40px; border-radius: 50%;
+  display: grid; place-items: center; color: #fff; flex-shrink: 0;
+  background: radial-gradient(circle at 30% 30%, var(--accent), color-mix(in srgb, var(--accent) 55%, #000));
+  box-shadow: var(--shadow-sm);
+}
+
+/* ---- buttons (pill-first, matching the design) ---- */
+.btn { border-radius: var(--radius-pill); box-shadow: var(--shadow-sm); }
+.btn--gold { background: var(--accent-2); color: #fff; }
+.btn--ghost { background: transparent; color: var(--accent); box-shadow: none; border: 1px solid var(--border); }
+.btn--block { width: 100%; }
+.btn__row { display: inline-flex; align-items: center; gap: 8px; justify-content: center; }
+
+/* ---- section header (title + gold tag pill) ---- */
+.sec-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 4px 0 10px; }
+.sec-head__title { font-size: 17px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+.tag {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: var(--radius-pill); font-size: 12px; font-weight: 600;
+  background: var(--gold-tint); color: var(--gold);
+}
+.tag--green { background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent); }
+.tag--mint { background: var(--mint); color: #0a3b28; }
+
+/* ---- card elevation applied to existing surfaces ---- */
+.home-card, .vod, .card, .stat, .prayer-next, .dhikr, .section,
+.settings-list__item, .juz-cell, .badge, .asma-cell {
+  box-shadow: var(--shadow-sm);
+  border-color: color-mix(in srgb, var(--border) 60%, transparent);
+}
+.home-card, .vod, .card, .section { border-radius: var(--radius-lg); }
+
+/* ============================================================
+   HOME
+   ============================================================ */
+.home { display: flex; flex-direction: column; gap: 16px; }
+.home > * { margin: 0; }
+
+/* greeting */
+.greet {
+  background: var(--paper-2); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 14px 16px; box-shadow: var(--shadow-sm);
+  display: flex; flex-direction: column; gap: 6px;
+}
+.greet__row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.greet__hi { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+.greet__dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); display: inline-block; }
+.greet__saved {
+  display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent); padding: 4px 10px; border-radius: var(--radius-pill);
+}
+.greet__meta { color: var(--muted); font-size: 13px; display: flex; gap: 14px; }
+
+/* continue reading */
+.cont {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 16px; box-shadow: var(--shadow-sm); cursor: pointer; text-align: start; color: var(--text); width: 100%;
+}
+.cont__top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 12px; }
+.cont__meta { color: var(--muted); font-size: 12px; }
+.cont__ayah { font-family: var(--font-quran); font-size: 24px; line-height: 2.4; text-align: center; margin: 6px 0 14px; }
+.cont__bottom { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.cont__cta { display: inline-flex; align-items: center; gap: 8px; background: var(--accent); color: #fff; padding: 10px 16px; border-radius: var(--radius-pill); font-weight: 700; font-size: 14px; }
+
+/* duo: review + wird */
+.home-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.duo-card { border-radius: var(--radius-lg); padding: 14px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: 8px; text-align: start; color: var(--text); border: 1px solid var(--border); }
+.duo-card--review { background: color-mix(in srgb, var(--accent-2) 14%, var(--surface)); }
+.duo-card--wird { background: var(--card); }
+.duo-card__top { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.duo-card__title { font-weight: 700; display: flex; align-items: center; gap: 6px; font-size: 15px; }
+.duo-card__big { font-size: 15px; }
+.duo-card__hint { color: var(--muted); font-size: 12px; }
+.duo-card__cta { margin-top: auto; align-self: flex-start; background: var(--accent-2); color: #fff; padding: 8px 14px; border-radius: var(--radius-pill); font-size: 13px; font-weight: 700; border: none; cursor: pointer; }
+.bar-line { height: 8px; border-radius: var(--radius-pill); background: var(--paper-3); overflow: hidden; }
+.bar-line__fill { height: 100%; background: var(--accent); border-radius: inherit; }
+
+/* friday banner */
+.friday {
+  display: flex; align-items: center; gap: 12px; text-align: start; width: 100%; cursor: pointer;
+  background: var(--gold-tint); border: 1px solid color-mix(in srgb, var(--accent-2) 30%, transparent);
+  border-radius: var(--radius-lg); padding: 14px; color: var(--text); box-shadow: var(--shadow-sm);
+}
+.friday__icon { width: 44px; height: 44px; border-radius: var(--radius); display: grid; place-items: center; background: var(--accent-2); color: #fff; flex-shrink: 0; font-size: 20px; }
+.friday__body { flex: 1; }
+.friday__body b { display: block; }
+.friday__body span { color: var(--gold); font-size: 13px; }
+
+/* quick tools */
+.qtools { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.qtool { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 6px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text); font-size: 12px; cursor: pointer; box-shadow: var(--shadow-sm); }
+.qtool__icon { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--paper-2); color: var(--accent); }
+
+/* khatirah image banner */
+.khatirah {
+  position: relative; border-radius: var(--radius-lg); overflow: hidden; min-height: 120px;
+  display: flex; align-items: flex-end; padding: 16px; color: #fff; text-align: start; width: 100%; cursor: pointer; border: none;
+  background: linear-gradient(0deg, rgba(0,40,25,0.85), rgba(0,40,25,0.25)), var(--accent);
+}
+.khatirah span { display: block; font-size: 12px; opacity: 0.85; }
+.khatirah b { font-family: var(--font-quran); font-size: 20px; }
+
+/* footer */
+.home-foot { text-align: center; color: var(--muted); font-size: 12px; line-height: 2; padding: 4px 0 8px; }
+.home-foot b { color: var(--text); font-weight: 600; }
+
+/* ============================================================
+   READER
+   ============================================================ */
+/* surah sub-header */
+.rsub { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+.rsub__title { background: none; border: none; color: var(--text); cursor: pointer; text-align: end; line-height: 1.3; }
+.rsub__title b { font-family: var(--font-quran); font-size: 22px; display: flex; align-items: center; gap: 6px; }
+.rsub__meta { color: var(--muted); font-size: 12px; }
+.rsub__tools { display: flex; align-items: center; gap: 8px; }
+.rtoggle {
+  display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; cursor: pointer;
+  border: 1px solid var(--border); border-radius: var(--radius-pill);
+  background: var(--surface); color: var(--muted); font-size: 12px; font-weight: 600;
+}
+.rtoggle--on { background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent); border-color: color-mix(in srgb, var(--accent) 40%, transparent); }
+.rtoggle__dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+
+/* labelled segmented tabs */
+.rtabs { display: flex; gap: 4px; padding: 4px; margin-bottom: 14px; background: var(--paper-2); border: 1px solid var(--border); border-radius: var(--radius-pill); }
+.rtabs__btn { flex: 1; border: none; background: none; color: var(--muted); padding: 9px 4px; border-radius: var(--radius-pill); cursor: pointer; font-size: 13px; font-weight: 600; }
+.rtabs__btn--on { background: var(--accent); color: #fff; box-shadow: var(--shadow-sm); }
+
+/* layered green audio player (mini + expanded) */
+.mini-player {
+  inset-inline: 10px; border: 1px solid color-mix(in srgb, #000 20%, var(--accent));
+  border-radius: var(--radius-lg); background: linear-gradient(160deg, var(--accent), color-mix(in srgb, var(--accent) 62%, #000));
+  color: #fff; box-shadow: var(--shadow-md);
+}
+.mini-player .mini-player__label { color: #fff; }
+.mini-player .icon-btn { background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.22); color: #fff; }
+.mini-player__err { color: #ffd7cf; }
+
+/* ============================================================
+   AYAH ACTIONS SHEET — icon tile grid (Fable §C.18)
+   ============================================================ */
+.act-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.act-tile {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  min-height: 64px; padding: 8px 4px; border: 1px solid var(--border); border-radius: var(--r-btn);
+  background: var(--surface-2); color: var(--text); cursor: pointer; font-size: 11px; text-align: center;
+}
+.act-tile span { line-height: 1.2; }
+.act-tile:active { background: var(--accent-soft); }
+@media (max-width: 360px) { .act-grid { grid-template-columns: repeat(4, 1fr); } }
+
+/* ============================================================
+   BOTTOM BAR + FAB (Fable §D.7)
+   ============================================================ */
+.bar__mic { position: relative; background: var(--accent); color: var(--on-accent); box-shadow: var(--el-3); }
+.bar__mic[data-listening='true'] { outline: 3px solid var(--success); outline-offset: 3px; }
+.bar__mic--on { outline: 3px solid var(--success); }
+.bar__mic-label {
+  position: absolute; bottom: -16px; inset-inline: 0; text-align: center;
+  font-size: 11px; color: var(--muted); font-weight: 600;
+}
+@media (min-width: 1024px) {
+  .bar {
+    inset-inline-start: 0; inset-inline-end: auto; inset-block: 0; width: 88px; height: 100dvh;
+    flex-direction: column; justify-content: center; gap: 18px;
+    border-top: none; border-inline-end: 1px solid var(--border);
+  }
+  .bar__mic-label { position: static; }
+}
+
+/* ============================================================
+   PRAYER
+   ============================================================ */
+.prayer-hero {
+  background: linear-gradient(150deg, var(--accent), color-mix(in srgb, var(--accent) 60%, #000));
+  color: #fff; border-radius: var(--radius-lg); padding: 22px; text-align: center;
+  box-shadow: var(--shadow-md); display: flex; flex-direction: column; gap: 4px;
+}
+.prayer-hero__k { opacity: 0.85; font-size: 13px; }
+.prayer-hero__name { font-size: 28px; font-weight: 700; }
+.prayer-hero__time { font-size: 20px; color: var(--gold-soft); }
+.prayer-hero__count { opacity: 0.85; font-size: 13px; }
+.prayer-list {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 4px 14px; box-shadow: var(--shadow-sm);
+}
+.prayer-row:last-child { border-bottom: none; }
+.prayer-row--next { color: var(--accent); font-weight: 700; }
+.qibla__dial { background: var(--surface); box-shadow: var(--shadow-sm); }
+
+/* ============================================================
+   STATS — achievement rug (سجادة الإنجاز)
+   ============================================================ */
+.stats-rug {
+  background: linear-gradient(150deg, color-mix(in srgb, var(--accent) 92%, #000), #08221a);
+  border-radius: var(--radius-lg); padding: 18px; color: #fff; box-shadow: var(--shadow-md); margin-bottom: 16px;
+}
+.stats-rug .stats-h { color: #fff; margin-top: 0; }
+.stats-rug .heatmap__cell { background: rgba(255,255,255,0.12); }
+.stats-rug .heatmap__cell--on { background: var(--gold-soft); }
+.stat b { color: var(--accent); }
+
+/* ============================================================
+   ACHIEVEMENTS / CERTIFICATES
+   ============================================================ */
+.ach-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 16px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: 10px;
+}
+.ach-card--report {
+  background: linear-gradient(150deg, color-mix(in srgb, var(--accent-2) 20%, var(--surface)), var(--surface));
+  margin-bottom: 16px;
+}
+.ach-card__row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.ach-card__title { font-weight: 700; display: flex; align-items: center; gap: 8px; }
+.ach-card__body { color: var(--muted); line-height: 1.9; margin: 0; font-size: 14px; }
+.ach-card .btn { align-self: flex-start; }
+
+/* ============================================================
+   MASTERY PATH
+   ============================================================ */
+.mastery { position: relative; padding-inline-start: 26px; margin-top: 8px; }
+.mastery::before { content: ''; position: absolute; inset-block: 8px; inset-inline-start: 9px; width: 2px; background: var(--border); }
+.mastery__step { position: relative; padding: 12px 0; }
+.mastery__dot {
+  position: absolute; inset-inline-start: -22px; top: 16px; width: 18px; height: 18px; border-radius: 50%;
+  background: var(--surface); border: 2px solid var(--border); z-index: 1;
+}
+.mastery__step--done .mastery__dot { background: var(--accent); border-color: var(--accent); }
+.mastery__step--now .mastery__dot { border-color: var(--accent-2); box-shadow: 0 0 0 4px var(--gold-tint); }
+.mastery__card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; box-shadow: var(--shadow-sm); }
+.mastery__card b { display: block; }
+.mastery__card span { color: var(--muted); font-size: 13px; }
+
+/* similarity tree anchor */
+.simtree-anchor {
+  background: linear-gradient(150deg, var(--accent), color-mix(in srgb, var(--accent) 62%, #000));
+  color: #fff; border-radius: var(--radius-lg); padding: 16px; box-shadow: var(--shadow-md); margin-bottom: 8px;
+}
+.simtree-anchor__ref { color: var(--gold-soft); font-size: 13px; }
+.simtree-anchor__text { font-size: 22px; line-height: 2.2; margin: 6px 0 0; }
+
+/* ============================================================
+   HIFZ + TASMI polish
+   ============================================================ */
+.hifz-review {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 22px; box-shadow: var(--shadow-sm); margin-top: 14px;
+}
+.hifz-controls select { border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text); }
+.tasmi-summary { border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); }
+.tasmi__ayah { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px; box-shadow: var(--shadow-sm); }

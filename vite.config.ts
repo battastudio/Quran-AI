@@ -22,8 +22,8 @@ export default defineConfig({
         start_url: '.',
         scope: '.',
         display: 'standalone',
-        background_color: '#0f1511',
-        theme_color: '#0f1511',
+        background_color: '#FDF2E7',
+        theme_color: '#004333',
         screenshots: [
           { src: 'screenshot-1.png', sizes: '1080x1920', type: 'image/png', form_factor: 'narrow' },
           { src: 'screenshot-2.png', sizes: '1080x1920', type: 'image/png', form_factor: 'narrow' },
@@ -46,7 +46,7 @@ export default defineConfig({
         importScripts: ['sw-reminders.js'],
         // Offline-ASR chunks (Vosk / transformers.js Whisper) are large and loaded
         // only on demand — keep them out of precache (fetched when the user opts in).
-        globIgnores: ['**/vosk-*.js', '**/transformers*.js', '**/ort-*.js', '**/*.wasm'],
+        globIgnores: ['**/vosk-*.js', '**/transformers*.js', '**/ort-*.js', '**/*.wasm', 'og/**'],
         runtimeCaching: [
           {
             // Bundled JSON: serve from cache (offline) but revalidate in the

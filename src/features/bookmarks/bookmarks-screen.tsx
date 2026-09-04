@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { AppHeader } from '../../components';
 import { useNavigate } from 'react-router-dom';
 import { allBookmarks, allHighlights, allNotes, setBookmarkFolder, setHighlight, toggleBookmark } from '../../lib/db';
 import { surahList } from '../../lib/quran';
@@ -39,7 +40,7 @@ export function BookmarksScreen() {
 
   return (
     <section className="screen">
-      <h1 className="screen__title">المحفوظات والملاحظات</h1>
+      <AppHeader section="المحفوظات والملاحظات" />
       {folders.length > 1 && (
         <div className="chips">
           {folders.map((f) => <button key={f} className={folder === f ? 'chip chip--on' : 'chip'} onClick={() => setFolder(f)}>{f === 'all' ? 'الكل' : f}</button>)}

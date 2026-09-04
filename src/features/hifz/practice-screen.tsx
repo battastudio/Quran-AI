@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Spinner } from '../../components';
+import { AppHeader, Spinner } from '../../components';
 import { getSurah, words } from '../../lib/quran';
 import { arabicNum } from '../../lib/format';
 import type { Surah } from '../../lib/types';
@@ -24,7 +24,7 @@ export function PracticeScreen() {
 
   return (
     <section className="screen">
-      <h1 className="screen__title">تدريب الحفظ — {surah.name}</h1>
+      <AppHeader section={`تدريب الحفظ — ${surah.name}`} />
       <div className="chips">
         <button className={mode === 'hide' ? 'chip chip--on' : 'chip'} onClick={() => setMode('hide')}>إخفاء الكلمات</button>
         <button className={mode === 'first' ? 'chip chip--on' : 'chip'} onClick={() => setMode('first')}>الحرف الأول</button>

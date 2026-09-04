@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { create } from 'zustand';
 import { BottomSheet, Icon } from '../../components';
 import { arabicNum } from '../../lib/format';
+import { tafsirFor } from '../../lib/quran';
 import { getHighlightColor, toggleBookmark, setHighlight } from '../../lib/db';
 import { shareAyahImage } from '../../lib/share-image';
 import { useAudio } from '../../store/audio-store';
@@ -32,6 +33,7 @@ export function AyahActions() {
   const nav = useNavigate();
   const [hl, setHl] = useState('');
   const ref = `سورة ${arabicNum(surah)} — الآية ${arabicNum(ayah)}`;
+  const link = `battastudio.github.io/Quran-AI/#/s/${surah}/${ayah}`;
 
   useEffect(() => { if (open) void getHighlightColor(surah, ayah).then((c) => setHl(c ?? '')); }, [open, surah, ayah]);
 
@@ -51,16 +53,17 @@ export function AyahActions() {
         ))}
         <span className="field__hint">تظليل الآية</span>
       </div>
-      <div className="action-grid">
-        <button onClick={() => { play([{ surah, ayah, g }]); close(); }}><Icon name="play" /> استماع</button>
-        <button onClick={() => { showTafsir(surah, ayah); close(); }}><Icon name="info" /> تفسير</button>
-        <button onClick={async () => { await toggleBookmark(surah, ayah); close(); }}><Icon name="bookmark" /> إشارة</button>
-        <button onClick={() => { showNote(surah, ayah); close(); }}><Icon name="note" /> ملاحظة</button>
-        <button onClick={copy}><Icon name="copy" /> نسخ</button>
-        <button onClick={shareText}><Icon name="share" /> مشاركة نص</button>
-        <button onClick={() => void shareAyahImage(text, ref)}><Icon name="download" /> صورة</button>
-        <button onClick={async () => { await memorizeAyah(surah, ayah); close(); }}><Icon name="plus" /> حفظ</button>
-        <button onClick={() => { close(); nav(`/similar/${surah}/${ayah}`); }}><Icon name="copy" /> آيات متشابهة</button>
+      <div className="act-grid">
+        <button className="act-tile" onClick={() => { play([{ surah, ayah, g }]); close(); }}><Icon name="play" size={22} /><span>استماع</span></button>
+        <button className="act-tile" onClick={() => { showTafsir(surah, ayah); close(); }}><Icon name="info" size={22} /><span>التفسير</span></button>
+        <button className="act-tile" onClick={async () => { await toggleBookmark(surah, ayah); close(); }}><Icon name="bookmark" size={22} /><span>علامة</span></button>
+        <button className="act-tile" onClick={() => { showNote(surah, ayah); close(); }}><Icon name="note" size={22} /><span>ملاحظة</span></button>
+        <button className="act-tile" onClick={async () => { await memorizeAyah(surah, ayah); close(); }}><Icon name="plus" size={22} /><span>حفظ</span></button>
+        <button className="act-tile" onClick={copy}><Icon name="copy" size={22} /><span>نسخ</span></button>
+        <button className="act-tile" onClick={shareText}><Icon name="share" size={22} /><span>مشاركة نص</span></button>
+        <button className="act-tile" onClick={() => void shareAyahImage(text, ref, { link })}><Icon name="download" size={22} /><span>صورة</span></button>
+        <button className="act-tile" onClick={async () => { const t = await tafsirFor('muyassar', surah, ayah); void shareAyahImage(text, ref, { tafsir: t ?? undefined, format: 'story', template: 'emerald', link }); }}><Icon name="share" size={22} /><span>بطاقة قصة</span></button>
+        <button className="act-tile" onClick={() => { close(); nav(`/similar/${surah}/${ayah}`); }}><Icon name="copy" size={22} /><span>المتشابهات</span></button>
       </div>
     </BottomSheet>
   );

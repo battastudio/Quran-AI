@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Icon } from '../../components';
+import { AppHeader,Icon } from '../../components';
 import { AudioSettings } from '../audio';
 import { TafsirManager } from '../tafsir';
 import { AccountPanel } from '../auth';
@@ -12,6 +12,7 @@ import { DataSettings } from './data-settings';
 import { ModelSettings } from './model-settings';
 import { OfflinePack } from './offline-pack';
 import { TranslationManager } from './translation-manager';
+import { shareApp } from '../share';
 
 function Section({ icon, title, hint, children }: { icon: string; title: string; hint: string; children: ReactNode }) {
   const [open, setOpen] = useState(false);
@@ -58,11 +59,25 @@ const SECTIONS = [
 export function SettingsScreen() {
   return (
     <section className="screen">
-      <h1 className="screen__title">الإعدادات</h1>
+      <AppHeader section="الإعدادات" />
       <InstallButton block />
       {SECTIONS.map((s) => (
         <Section key={s.title} icon={s.icon} title={s.title} hint={s.hint}>{s.body}</Section>
       ))}
+      <Section icon="share" title="شارك التطبيق" hint="صدقة جارية — انشره لمن تحب">
+        <p className="field__hint">كل حرف يُقرأ بسببك أجرٌ لك.</p>
+        <button className="btn btn--block" onClick={() => void shareApp()}>
+          <span className="btn__row"><Icon name="share" size={18} /> مشاركة التطبيق</span>
+        </button>
+      </Section>
+      <Section icon="info" title="حول التطبيق" hint="المصادر والتراخيص">
+        <p className="field__hint" style={{ lineHeight: 2 }}>
+          نصّ المصحف: مصحف المدينة النبوية — رواية حفص عن عاصم.<br />
+          التفاسير والترجمات مصادر منسوبة لأصحابها.<br />
+          الخطوط: Amiri Quran و IBM Plex Sans Arabic (رخصة OFL).<br />
+          تطبيق مجاني بلا إعلانات ويعمل بدون إنترنت.
+        </p>
+      </Section>
     </section>
   );
 }

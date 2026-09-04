@@ -46,4 +46,31 @@ testing. For each: ✅ works / ⚠️ partial / ❌ broken — report the row + 
 ## Recitation lab
 - [ ] Record → «تسجيلي» replays; «الأصل» plays the reciter; delete works.
 
+## Nour design + theme
+- [ ] Default look is the parchment/green **Nour** theme; status bar is green (light) /
+      dark (dark mode).
+- [ ] Settings → المظهر: switch light/dark/emerald/royal/… — all readable, RTL correct.
+- [ ] Bottom bar: 5 tabs + centre mic FAB; reselecting a tab scrolls to top; haptic tap.
+
+## Deep links (share/growth)
+- [ ] Open `…/#/s/2/255` → lands on Ayat al-Kursi in the reader.
+- [ ] Open `…/#/today` → opens today's wird position (or al-Fatiha if no plan).
+- [ ] Send an ayah link in WhatsApp → preview shows the ayah (OG page) on a fresh device.
+
+## Share cards (da'wah)
+- [ ] Ayah actions → «صورة» shares a square card; «بطاقة قصة» shares a 9:16 story with
+      tafsir; both carry the deep link + «مجاناً بلا إعلانات».
+- [ ] Achievements → «شهادة الإتقان» / «تقرير التقدّم» export a certificate image.
+
+## Khatmah group + invite
+- [ ] Khatmah → «ختمة جماعية» → «أنشئ الرابط وشارك» produces a link; opening it shows the
+      juz picker; tapping a juz opens the reader there.
+- [ ] Complete a wird once → one-time invite sheet appears (not again after dismiss);
+      Settings → «شارك التطبيق» works anytime.
+
+## Reverence
+- [ ] Reader ayah text matches the mushaf exactly (no odd glyphs); source line present.
+- [ ] Stats badges use quality names + geometric motifs; streak reads «الاستمرار».
+- [ ] Tasmi shows «يقيس صحّة الكلمات فقط، ولا يقيّم أحكام التجويد».
+
 Report back the ❌/⚠️ rows and I'll fix them.

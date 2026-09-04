@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Spinner } from '../../components';
+import { AppHeader,Spinner } from '../../components';
 import { getSurah } from '../../lib/quran';
 import { arabicNum } from '../../lib/format';
 import type { HifzCard } from '../../lib/types';
@@ -61,7 +61,7 @@ export function HifzScreen() {
 
   return (
     <section className="screen">
-      <h1 className="screen__title">الحفظ</h1>
+      <AppHeader section="الحفظ" />
       <div className="hifz-stats">
         <div className="stat"><b>{arabicNum(total)}</b><span>آية محفوظة</span></div>
         <div className="stat"><b>{arabicNum(queue.length)}</b><span>للمراجعة</span></div>
@@ -74,6 +74,7 @@ export function HifzScreen() {
           {Array.from({ length: 30 }, (_, i) => <option key={i} value={`juz:${i + 1}`}>الجزء {arabicNum(i + 1)}</option>)}
         </select>
         <button className="btn btn--sm" onClick={() => nav('/hifz/practice')}>تدريب الحفظ</button>
+        <button className="btn btn--sm btn--gold" onClick={() => nav('/achievements')}>شهاداتي</button>
       </div>
 
       {!current ? (

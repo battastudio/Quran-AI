@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { AppHeader } from '../../components';
 import { arabicNum } from '../../lib/format';
 import { getKv, setKv } from '../../lib/db';
 import { completeFeedback, tapFeedback } from '../../lib/haptics';
@@ -23,7 +24,7 @@ export function TasbihScreen() {
 
   return (
     <section className="screen">
-      <h1 className="screen__title">المسبحة</h1>
+      <AppHeader section="المسبحة" />
       <div className="chips">
         {PRESETS.map((p) => <button key={p} className={dhikr === p ? 'chip chip--on' : 'chip'} onClick={() => setDhikr(p)}>{p}</button>)}
       </div>

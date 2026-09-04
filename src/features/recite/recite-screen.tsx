@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Icon } from '../../components';
+import { AppHeader,Icon } from '../../components';
 import { getSurah } from '../../lib/quran';
 import { arabicNum } from '../../lib/format';
 import { getKv } from '../../lib/db';
@@ -50,7 +50,7 @@ export function ReciteScreen() {
 
   return (
     <section className="screen">
-      <h1 className="screen__title">معمل التلاوة</h1>
+      <AppHeader section="معمل التلاوة" />
       <div className="ab-row">
         <span>سورة {arabicNum(surah)} — الآية</span>
         <input type="number" min={1} value={ayah} onChange={(e) => setAyah(Number(e.target.value))} />
